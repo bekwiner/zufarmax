@@ -1,0 +1,23 @@
+{
+  "name": "zufarmax-backend",
+  "version": "1.0.0",
+  "description": "Telegram bot + API backend for ZufarMax",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "node --watch src/main.js"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "express"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.16.3",
+    "telegraf": "^4.16.3"
+  }
+}

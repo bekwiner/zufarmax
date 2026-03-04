@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>2026 VIP Gaming Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/services.css">
+</head>
+
+<body>
+    <!-- Removed mesh-bg per user request to use simple dark/orange mid -->
+
+    <!-- Toast -->
+    <div class="toast-msg" id="toast"><i class="fa-solid fa-bell"></i> <span>Tizim xabari</span></div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <div
+                style="width: 42px; height: 42px; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary-glow); display: flex; align-items: center; justify-content: center; background: #000;">
+                <img src="assets/img/logo.JPG" alt="ZufarMax" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <span
+                style="font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 0 10px rgba(255,255,255,0.3)">ZufarMax
+                Service</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- HOME PAGE -->
+        <section id="page-home" class="tab-page active">
+            <!-- Live Ticker -->
+            <div class="live-ticker">
+                <div class="ticker-content" id="live-ticker-text">
+                    <i class="fa-solid fa-fire glow-icon" style="color:var(--primary)"></i>
+                    Muvaffaqiyatli yetkazildi: <span style="font-weight:900; color:var(--primary)">1060 Almaz</span>.
+                </div>
+            </div>
+
+            <!-- Hero Slider -->
+            <div class="hero-slider-container"
+                style="position:relative; z-index:1; overflow:hidden; height: 240px; margin-bottom: var(--space-xl); padding: 0; border-radius: 16px;">
+                <div class="hero-slides" id="hero-slider"
+                    style="display:flex; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); height: 100%;">
+
+                    <!-- Slide 1: Diamonds -->
+                    <div class="hero-slide"
+                        style="min-width: 100%; height: 100%; position:relative; padding: 30px 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div
+                            style="position:absolute; inset:0; background: linear-gradient(to top, rgba(6,7,19,0.9) 0%, transparent 60%), url('assets/banner/Almas.webp') center top/cover; z-index: -1;">
+                        </div>
+                        <h1 class="title-xl" style="font-size: 1.3rem; margin-bottom: 10px;">FREE FIRE DIAMONDS</h1>
+                        <button class="btn-prime" onclick="navTo('sub-dia')"
+                            style="width:fit-content; border-radius:30px; padding:8px 20px; font-size: 0.8rem;"><i
+                                class="fa-solid fa-gem"></i> Xarid qilish</button>
+                    </div>
+
+                    <!-- Slide 2: Free Fire Akkauntlar -->
+                    <div class="hero-slide"
+                        style="min-width: 100%; height: 100%; position:relative; padding: 30px 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div
+                            style="position:absolute; inset:0; background: linear-gradient(to top, rgba(6,7,19,0.9) 0%, transparent 60%), url('assets/banner/accaunt.jpeg') center top/cover; z-index: -1;">
+                        </div>
+                        <h1 class="title-xl" style="font-size: 1.3rem; margin-bottom: 10px;">NASTROYKA</h1>
+                        <button class="btn-prime" onclick="navTo('page-acc')"
+                            style="width:fit-content; border-radius:30px; padding:8px 20px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-user-ninja"></i> Katalog
+                        </button>
+                    </div>
+
+                    <!-- Slide 3: PUBG UC -->
+                    <div class="hero-slide"
+                        style="min-width: 100%; height: 100%; position:relative; padding: 30px 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div
+                            style="position:absolute; inset:0; background: linear-gradient(to top, rgba(6,7,19,0.9) 0%, transparent 60%), url('assets/banner/pubg-uc.webp') center top/cover; z-index: -1;">
+                        </div>
+                        <h1 class="title-xl" style="font-size: 1.3rem; margin-bottom: 10px;">PUBG MOBILE UC</h1>
+                        <button class="btn-prime" onclick="navTo('sub-uc')"
+                            style="width:fit-content; border-radius:30px; padding:8px 20px; font-size: 0.8rem; background: #ffcc00; color: #000;">
+                            <i class="fa-solid fa-parachute-box"></i> Xarid qilish
+                        </button>
+                    </div>
+
+                    <!-- Slide 4: Standoff 2 Gold -->
+                    <div class="hero-slide"
+                        style="min-width: 100%; height: 100%; position:relative; padding: 30px 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div
+                            style="position:absolute; inset:0; background: linear-gradient(to top, rgba(6,7,19,0.9) 0%, transparent 60%), url('assets/banner/standoff-2-gold.webp') center top/cover; z-index: -1;">
+                        </div>
+                        <h1 class="title-xl" style="font-size: 1.3rem; margin-bottom: 10px;">STANDOFF 2 GOLD</h1>
+                        <button class="btn-prime" onclick="navTo('sub-gold')"
+                            style="width:fit-content; border-radius:30px; padding:8px 20px; font-size: 0.8rem; background: #00f0ff; color: #000;">
+                            <i class="fa-solid fa-crosshairs"></i> Xarid qilish
+                        </button>
+                    </div>
+
+                    <!-- Slide 5: Telegram Premium -->
+                    <div class="hero-slide"
+                        style="min-width: 100%; height: 100%; position:relative; padding: 30px 20px; display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div
+                            style="position:absolute; inset:0; background: linear-gradient(to top, rgba(6,7,19,0.9) 0%, transparent 60%), url('assets/banner/Telegram-Premium.jpeg') center top/cover; z-index: -1;">
+                        </div>
+                        <h1 class="title-xl" style="font-size: 1.3rem; margin-bottom: 10px;">TELEGRAM PREMIUM</h1>
+                        <button class="btn-prime" onclick="navTo('sub-tg')"
+                            style="width:fit-content; border-radius:30px; padding:8px 20px; font-size: 0.8rem; background: #0066ff;">
+                            <i class="fa-brands fa-telegram"></i> Xarid qilish
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Slider Dots -->
+                <div class="slider-dots" id="hero-dots"
+                    style="position:absolute; bottom: 20px; right: 20px; display:flex; gap: 8px; z-index: 10;">
+                    <div class="dot active"
+                        style="width: 24px; height: 8px; border-radius: 4px; background: var(--primary);"></div>
+                    <div class="dot"
+                        style="width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.3);"></div>
+                    <div class="dot"
+                        style="width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.3);"></div>
+                    <div class="dot"
+                        style="width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.3);"></div>
+                    <div class="dot"
+                        style="width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.3);"></div>
+                </div>
+            </div>
+
+            <div class="section-label" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <i class="fa-solid fa-bullhorn"
+                    style="color: #00E5FF; font-size: 1rem; filter: drop-shadow(0 0 5px rgba(0,229,255,0.45));"></i>
+                <h3 style="margin: 0; font-size: 1rem; font-weight: 900; color: #fff; letter-spacing: 0.5px;">
+                    YANGILIKLAR</h3>
+            </div>
+            <div id="home-news-list" style="display:flex; flex-direction:column; gap:10px; margin-bottom: 20px;">
+                <div class="glass-panel" style="padding:12px; color:var(--text-muted); font-size:0.78rem; font-weight:700;">Yangiliklar yuklanmoqda...</div>
+            </div>
+
+            <!-- Tezkor Xizmatlar / Kategoriylar --> 
+            <div class="section-label"
+                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 15px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-bolt"
+                        style="color: #FFD700; font-size: 1rem; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));"></i>
+                    <h3 style="margin: 0; font-size: 1rem; font-weight: 900; color: #fff; letter-spacing: 0.5px;">
+                        TEZKOR XIZMATLAR</h3>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--primary); font-weight: 700; cursor: pointer;"
+                    onclick="navTo('page-dia')">Barchasi <i class="fa-solid fa-chevron-right"
+                        style="font-size: 0.6rem;"></i></div>
+            </div>
+
+            <div class="quick-services-wrap"
+                style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;">
+                    <div class="glass-panel"
+                        style="grid-column:1 / -1; padding:12px; text-align:center; color:var(--text-muted); font-size:0.75rem; font-weight:700;">
+                        Xizmatlar yuklanmoqda...
+                    </div>
+                </div>
+
+                <!-- HOT Mahsulotlar -->
+                <div id="home-hot-wrap" style="display:none;">
+                    <div class="section-label" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <i class="fa-solid fa-fire-flame-curved"
+                            style="color: #FF4757; font-size: 1rem; filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.5));"></i>
+                        <h3 style="margin: 0; font-size: 1rem; font-weight: 900; color: #fff; letter-spacing: 0.5px;">HOT</h3>
+                    </div>
+                    <div class="scroll-track" id="home-hot-list" style="padding-bottom: 20px; margin-bottom: 15px;"></div>
+                </div>
+
+        </section>
+
+        <!-- SERVICES / DIAMONDS PAGE -->
+        <section id="page-dia" class="tab-page">
+            <!-- Premium Glass Header -->
+            <div class="glass-panel"
+                style="padding: 18px 15px; margin-bottom: 24px; border: 1px solid rgba(255, 255, 255, 0.05); background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent); border-radius: 20px; position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top:0; left:0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.5;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div
+                            style="width: 32px; height: 32px; background: rgba(0, 229, 255, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                            <i class="fa-solid fa-gamepad" style="font-size: 1.1rem;"></i>
+                        </div>
+                        <h2
+                            style="margin: 0; font-size: 1.3rem; font-weight: 950; letter-spacing: 1px; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                            XIZMATLAR</h2>
+                    </div>
+                    <div
+                        style="display: flex; align-items: center; gap: 6px; background: rgba(0, 255, 137, 0.1); padding: 4px 10px; border-radius: 100px; border: 1px solid rgba(0, 255, 137, 0.2);">
+                        <span
+                            style="width: 6px; height: 6px; background: #00FF89; border-radius: 50%; box-shadow: 0 0 8px #00FF89;"></span>
+                        <span
+                            style="font-size: 0.6rem; font-weight: 900; color: #00FF89; text-transform: uppercase; letter-spacing: 0.5px;">Online</span>
+                    </div>
+                </div>
+
+                <p
+                    style="margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; font-weight: 600; letter-spacing: 0.2px;">
+                    O'zingizga kerakli o'yin turini tanlang va tezkor xaridlarni <span style="color: #fff;">1-15
+                        daqiqada</span> amalga oshiring.
+                </p>
+            </div>
+
+            <div class="services-grid-lux" id="main-services">
+
+                <!-- Free Fire Luxury Card -->
+                <div class="service-card-lux card-ff ripple" onclick="navTo('sub-dia')">
+                    <div class="lux-icon-wrap">
+                        <div class="lux-glow"></div>
+                        <img src="assets/img/freefire.webp" alt="FF">
+                    </div>
+                    <div class="lux-srv-title">Free Fire</div>
+                    <div class="lux-srv-badge">Almazlar</div>
+                </div>
+
+                <!-- PUBG Mobile Luxury Card -->
+                <div class="service-card-lux card-pubg ripple" onclick="navTo('sub-uc')">
+                    <div class="lux-icon-wrap">
+                        <div class="lux-glow"></div>
+                        <img src="assets/img/pubg.png" alt="PUBG">
+                    </div>
+                    <div class="lux-srv-title">PUBG Mobile</div>
+                    <div class="lux-srv-badge">UC Paketlar</div>
+                </div>
+
+                <!-- Standoff 2 Luxury Card -->
+                <div class="service-card-lux card-so2 ripple" onclick="navTo('sub-gold')">
+                    <div class="lux-icon-wrap">
+                        <div class="lux-glow"></div>
+                        <img src="assets/img/standoff.png" alt="SO2">
+                    </div>
+                    <div class="lux-srv-title">Standoff 2</div>
+                    <div class="lux-srv-badge">Gold & Promo</div>
+                </div>
+
+                <!-- Telegram Luxury Card -->
+                <div class="service-card-lux card-tg ripple" onclick="navTo('sub-tg')">
+                    <div class="lux-icon-wrap">
+                        <div class="lux-glow"></div>
+                        <img src="assets/img/telegram.png" alt="TG">
+                    </div>
+                    <div class="lux-srv-title">Telegram</div>
+                    <div class="lux-srv-badge">Premium & Stars</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SUB PAGES FOR SERVICES -->
+        <section id="sub-dia" class="tab-page">
+            <div class="glass-panel"
+                style="padding: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 229, 255, 0.2); background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), transparent);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <button class="btn-sec ripple"
+                        style="width:34px; height:34px; padding:0; border-radius:10px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--primary);"
+                        onclick="navTo('page-dia')"><i class="fa-solid fa-arrow-left"
+                            style="font-size:0.85rem"></i></button>
+                    <h2 class="title-xl" style="margin:0; font-size:1.15rem; letter-spacing: 0.5px;">💎 FREE FIRE
+                        DIAMONDS</h2>
+                </div>
+                <p class="text-sec" style="margin:0; font-size:0.75rem; font-weight: 600; opacity: 0.8;">Eng arzon
+                    narxlar + bonusli paketlar. 1–5 daqiqa.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom: 24px;"
+                id="all-diamonds"></div>
+        </section>
+
+        <section id="sub-uc" class="tab-page">
+            <div class="glass-panel"
+                style="padding: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 255, 137, 0.2); background: linear-gradient(135deg, rgba(0, 255, 137, 0.08), transparent);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <button class="btn-sec ripple"
+                        style="width:34px; height:34px; padding:0; border-radius:10px; background: rgba(0,255,137,0.1); border: 1px solid rgba(0,255,137,0.2); color: #00FF89;"
+                        onclick="navTo('page-dia')"><i class="fa-solid fa-arrow-left"
+                            style="font-size:0.85rem"></i></button>
+                    <h2 class="title-xl" style="margin:0; font-size:1.15rem; letter-spacing: 0.5px;">🟢 PUBG MOBILE UC
+                    </h2>
+                </div>
+                <p class="text-sec" style="margin:0; font-size:0.75rem; font-weight: 600; opacity: 0.8;">Tez, xavfsiz va
+                    avtomatik to‘lov. 24/7 xizmat.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom: 24px;" id="all-uc">
+            </div>
+        </section>
+
+        <section id="sub-gold" class="tab-page">
+            <div class="glass-panel"
+                style="padding: 12px; margin-bottom: 20px; border: 1px solid rgba(255, 215, 0, 0.2); background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), transparent);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <button class="btn-sec ripple"
+                        style="width:34px; height:34px; padding:0; border-radius:10px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: #FFD700;"
+                        onclick="navTo('page-dia')"><i class="fa-solid fa-arrow-left"
+                            style="font-size:0.85rem"></i></button>
+                    <h2 class="title-xl" style="margin:0; font-size:1.15rem; letter-spacing: 0.5px;">🟡 STANDOFF 2 GOLD
+                    </h2>
+                </div>
+                <p class="text-sec" style="margin:0; font-size:0.75rem; font-weight: 600; opacity: 0.8;">Tezkor
+                    to‘ldirish, 100% xavfsiz transaksiya.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom: 24px;"
+                id="all-gold"></div>
+        </section>
+
+        <section id="sub-tg" class="tab-page">
+            <div class="glass-panel"
+                style="padding: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 136, 204, 0.2); background: linear-gradient(135deg, rgba(0, 136, 204, 0.08), transparent);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <button class="btn-sec ripple"
+                        style="width:34px; height:34px; padding:0; border-radius:10px; background: rgba(0,136,204,0.1); border: 1px solid rgba(0,136,204,0.2); color: #0088cc;"
+                        onclick="navTo('page-dia')"><i class="fa-solid fa-arrow-left"
+                            style="font-size:0.85rem"></i></button>
+                    <h2 class="title-xl" style="margin:0; font-size:1.15rem; letter-spacing: 0.5px;">⭐ TELEGRAM</h2>
+                </div>
+                <p class="text-sec" style="margin:0; font-size:0.75rem; font-weight: 600; opacity: 0.8;">Rasmiy obuna,
+                    tezkor aktivatsiya.</p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom: 24px;" id="all-tg">
+            </div>
+        </section>
+
+        <section id="sub-dynamic" class="tab-page">
+            <div class="glass-panel"
+                style="padding: 12px; margin-bottom: 20px; border: 1px solid rgba(0, 229, 255, 0.2); background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), transparent);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <button class="btn-sec ripple"
+                        style="width:34px; height:34px; padding:0; border-radius:10px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); color: var(--primary);"
+                        onclick="navTo('page-dia')"><i class="fa-solid fa-arrow-left"
+                            style="font-size:0.85rem"></i></button>
+                    <h2 class="title-xl" id="dynamic-cat-title" style="margin:0; font-size:1.15rem; letter-spacing: 0.5px;">
+                        XIZMATLAR
+                    </h2>
+                </div>
+                <p class="text-sec" id="dynamic-cat-subtitle" style="margin:0; font-size:0.75rem; font-weight: 600; opacity: 0.8;">
+                    Tanlangan kategoriya mahsulotlari.
+                </p>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom: 24px;" id="all-dynamic">
+            </div>
+        </section>
+
+        <!-- HELP CENTER / CHAT PAGE -->
+        <section id="page-help" class="tab-page">
+            <div
+                style="display:flex; align-items:center; gap:12px; padding: 15px 15px 10px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <button class="btn-sec ripple" style="width:36px; height:36px; padding:0; border-radius:10px;"
+                    onclick="navTo('page-prof')"><i class="fa-solid fa-arrow-left"
+                        style="font-size:0.9rem"></i></button>
+                <div>
+                    <h2 class="title-xl" style="margin:0; font-size:1rem;">YORDAM MARKAZI</h2>
+                    <div
+                        style="display:flex; align-items:center; gap:5px; font-size:0.6rem; color:#00FF89; font-weight:800; text-transform:uppercase;">
+                        <span
+                            style="width:5px; height:5px; background:#00FF89; border-radius:50%; box-shadow:0 0 5px #00FF89;"></span>
+                        Agent Aruz Online
+                    </div>
+                </div>
+            </div>
+
+            <div id="chat-messages">
+                <!-- Messages will be injected here by JS -->
+
+                <!-- Inline Grid Keyboard -->
+                <div class="chat-keyboard" id="chat-keyboard">
+                    <div class="reply-chip" onclick="handleChatReply('time')">Qancha vaqtda tushadi?</div>
+                    <div class="reply-chip" onclick="handleChatReply('not_received')">Almaz kelmadi?</div>
+                    <div class="reply-chip" onclick="handleChatReply('safety')">Xavfsizmi?</div>
+                    <div class="reply-chip" onclick="handleChatReply('dasturchi')">Texnik yordam?</div>
+                    <div class="reply-chip"
+                        style="background:rgba(255, 71, 87, 0.1); border-color:rgba(255, 71, 87, 0.2); color:#FF4757;"
+                        onclick="handleChatReply('no_question')">Savolim yo'q</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SETTINGS PAGE -->
+        <section id="page-acc" class="tab-page">
+            <!-- Premium Glass Header -->
+            <div class="glass-panel"
+                style="padding: 18px 15px; margin-bottom: 24px; border: 1px solid rgba(255, 255, 255, 0.05); background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent); border-radius: 20px; position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top:0; left:0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--secondary), transparent); opacity: 0.5;">
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div
+                            style="width: 32px; height: 32px; background: rgba(223, 0, 255, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                            <i class="fa-solid fa-sliders" style="font-size: 1.1rem;"></i>
+                        </div>
+                        <h2
+                            style="margin: 0; font-size: 1.3rem; font-weight: 950; letter-spacing: 1px; background: linear-gradient(90deg, #fff, var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                            NASTROYKA</h2>
+                    </div>
+                    <div
+                        style="display: flex; align-items: center; gap: 6px; background: rgba(0, 229, 255, 0.1); padding: 4px 10px; border-radius: 100px; border: 1px solid rgba(0, 229, 255, 0.2);">
+                        <span
+                            style="width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary-glow);"></span>
+                        <span
+                            style="font-size: 0.6rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;">Verified</span>
+                    </div>
+                </div>
+
+                <p
+                    style="margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; font-weight: 600; letter-spacing: 0.2px;">
+                    Sizga PRO-level Free Fire nastroykani  beraman!
+                </p>
+            </div>
+
+            <div class="filter-label">Telefon brendlari</div>
+            <div class="filter-wrap" id="settings-model-list" style="margin-bottom:16px;">
+                <div class="filter-chip active">Yuklanmoqda...</div>
+            </div>
+            <div class="filter-label">Barchasi:</div>
+            <div class="filter-wrap" id="settings-brand-model-list" style="margin-bottom:16px;">
+                <div class="filter-chip">Model tanlang...</div>
+            </div>
+
+            <div id="settings-model-empty" class="glass-panel"
+                style="padding:16px; text-align:center; color:var(--text-muted); font-size:0.78rem; font-weight:700;">
+                Hozircha model qo'shilmagan.
+            </div>
+            <div id="settings-model-card" class="glass-panel" style="padding:14px; display:none;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    <div style="width:48px; height:48px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
+                        <img id="settings-model-image" src="assets/img/logo.JPG" alt="model"
+                            style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div>
+                        <div style="font-size:0.95rem; font-weight:900; color:#fff;" id="settings-model-title">Model</div>
+                        <div id="settings-model-tip" style="font-size:0.68rem; color:var(--text-muted); font-weight:700; margin-top:2px;">bosing</div>
+                    </div>
+                </div>
+                <div id="settings-model-items" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+            <div style="display:none;" id="all-accounts">
+                <!-- account section disabled -->
+            </div>
+        </section>
+
+        <!-- PROFILE PAGE: COMPACT PREMIUM -->
+        <section id="page-prof" class="tab-page">
+            <div class="glass-panel"
+                style="padding:20px 15px; text-align:center; margin-bottom:20px; position: relative;">
+                <div onclick="showToast('Yangiliklar yo\'q')"
+                    style="position: absolute; right: 15px; top: 15px; font-size: 1rem; color: var(--text-muted); cursor: pointer;">
+                    <i class="fa-solid fa-bell"></i>
+                    <span
+                        style="position: absolute; top: 0; right: -4px; width: 6px; height: 6px; background: var(--accent); border-radius: 50%;"></span>
+                </div>
+                <div
+                    style="width:76px; height:76px; background:linear-gradient(45deg, var(--primary), var(--secondary)); border-radius:22px; transform:rotate(45deg); margin:0 auto 20px auto; overflow:hidden; box-shadow:0 8px 20px rgba(0,255,204,0.25)">
+                    <img id="prof-avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=ProGamer"
+                        style="width:140%; height:140%; transform:rotate(-45deg) translate(-15%, -15%);">
+                </div>
+                <h2 class="title-md" id="prof-name" style="font-size:1.1rem; margin-bottom:4px">ZufarMax Service</h2>
+                <div
+                    style="display:inline-block; background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:10px; font-family:monospace; font-size:0.85rem; color:var(--text-muted); border:1px solid rgba(255,255,255,0.08)">
+                    UID: <span id="prof-uid">#9812456</span>
+                </div>
+                <div class="glass-panel"
+                    style="margin-top: 12px; padding: 10px 12px; display:flex; align-items:center; gap:10px; background: rgba(0,229,255,0.05); border:1px solid rgba(0,229,255,0.18); border-radius: 12px;">
+                    <div
+                        style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0,229,255,0.1); display: flex; align-items: center; justify-content: center; flex: none;">
+                        <i class="fa-solid fa-gem" style="color: var(--primary); font-size: 1rem;"></i>
+                    </div>
+                    <div style="text-align:left; flex:1;">
+                        <div style="font-size:0.6rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">ALMAZ</div>
+                        <div id="prof-balance" style="font-size:1rem; font-weight:900; color:var(--primary);">0</div>
+                    </div>
+                </div>
+
+               
+
+                <!-- REFERAL Balance: COMPACT SYNC -->
+                <div class="glass-panel"
+                    style="margin-top: 16px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 12px;">
+                    <div
+                        style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 215, 0, 0.1); display: flex; align-items: center; justify-content: center; flex: none;">
+                        <i class="fa-solid fa-user-plus" style="color: #FFD700; font-size: 1rem;"></i>
+                    </div>
+                    <div style="text-align: left; flex: 1;">
+                        <div
+                            style="font-size: 0.6rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">
+                            REFERAL</div>
+                        <div style="font-size: 1rem; font-weight: 900; color: #FFD700;" id="prof-ref-total">0 ta</div>
+                    </div>
+                    <button class="btn-prime"
+                        style="width: 70px; height: 26px; padding: 0; font-size: 0.6rem; border-radius: 6px; background: #FFD700; color: #000; flex: none;"
+                        onclick="navTo('page-ref')">REFERAL</button>
+                </div>
+            </div>
+
+            <h3 class="title-md" style="margin-bottom:12px; font-size: 0.9rem; opacity: 0.8;">BUYURTMALARIM</h3>
+            <div id="my-orders-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+                <div class="glass-panel" style="padding:14px; text-align:center; color:var(--text-muted); font-size:0.78rem; font-weight:700;">
+                    Buyurtmalar yuklanmoqda...
+                </div>
+            </div>
+
+            <h3 class="title-md" style="margin-bottom:16px">MENYU</h3>
+            <div class="glass-panel" style="padding:0; overflow:hidden">
+                <div class="ripple" onclick="showToast('Til hozircha faqat O\'zbek tilida')"
+                    style="padding:20px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:16px; cursor: pointer;">
+                    <i class="fa-solid fa-language" style="font-size:1.4rem; color:var(--text-muted)"></i>
+                    <span style="font-weight:700; font-size:1.1rem">Tilni o'zgartirish</span>
+                    <span
+                        style="margin-left:auto; color:var(--text-muted); font-size: 0.9rem; font-weight: 600;">O'zbek</span>
+                </div>
+                <div class="ripple" style="padding:20px; display:flex; align-items:center; gap:16px; cursor: pointer;"
+                    onclick="navTo('page-help')">
+                    <i class="fa-solid fa-headset" style="font-size:1.4rem; color:var(--primary)"></i>
+                    <span style="font-weight:700; font-size:1.1rem">Yordam Markazi</span>
+                    <i class="fa-solid fa-chevron-right" style="margin-left:auto; color:var(--text-muted)"></i>
+                </div>
+            </div>
+        </section>
+        <!-- REFERRAL PAGE -->
+        <section id="page-ref" class="tab-page">
+            <div class="glass-panel" style="padding: 18px 16px; margin-bottom: 16px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,215,0,0.1);display:flex;align-items:center;justify-content:center;">
+                        <i class="fa-solid fa-user-plus" style="color:#FFD700;"></i>
+                    </div>
+                    <div>
+                        <h2 class="title-xl" style="margin:0; font-size:1.05rem;">REFERAL TIZIMI</h2>
+                        <p class="text-sec" style="margin:2px 0 0 0; font-size:0.72rem;">Do'st taklif qiling va bonus oling</p>
+                    </div>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">
+                    1. Referal havolangizni ulashing.<br>
+                    2. Do'stingiz botga kirib buyurtma qilsa, sizga almaz beriladi.<br>
+                    3. almaz avtomatik statistikaga qo'shiladi.
+                </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 14px; margin-bottom: 14px;">
+                <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">Sizning havolangiz</div>
+                <div style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 10px;">
+                    <div id="page-ref-link" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace; font-size:0.72rem; color:#fff;">https://t.me/shshhsjssj_bot?start=ref_0000</div>
+                    <button id="btn-copy-ref" class="btn-prime" style="width:82px; height:30px; padding:0; font-size:0.65rem; border-radius:8px;">NUSXA</button>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom: 14px;">
+                <div class="glass-panel" style="padding:12px; text-align:center;">
+                    <div style="font-size:1.1rem; font-weight:900; color:#FFD700;" id="page-ref-count">0</div>
+                    <div style="font-size:0.62rem; color:var(--text-muted); text-transform:uppercase;">Referallar</div>
+                </div>
+                <div class="glass-panel" style="padding:12px; text-align:center;">
+                    <div style="font-size:1.1rem; font-weight:900; color:var(--primary);" id="page-ref-earned">0</div>
+                    <div style="font-size:0.62rem; color:var(--text-muted); text-transform:uppercase;">Balans</div>
+                </div>
+                <div class="glass-panel" style="padding:12px; text-align:center;">
+                    <div style="font-size:1.1rem; font-weight:900; color:#00ff89;" id="page-ref-today">0</div>
+                    <div style="font-size:0.62rem; color:var(--text-muted); text-transform:uppercase;">Bugun</div>
+                </div>
+            </div>
+            <button id="btn-redeem-diamonds" class="btn-prime"
+                style="width:100%; margin-bottom:14px; height:40px; border-radius:10px; font-size:0.82rem;"
+                onclick="openRedeemModal()">
+                <i class="fa-solid fa-bolt"></i> Almaz chiqarish
+            </button>
+
+            <div class="glass-panel" style="padding: 14px; margin-bottom: 20px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="font-size:0.8rem; font-weight:800;">Chaqirgan userlar</div>
+                    <span style="font-size:0.65rem; color:var(--text-muted);">Real statistika</span>
+                </div>
+                <div id="page-ref-users-empty" style="font-size:0.75rem; color:var(--text-muted);">
+                    Hozircha hech kim sizning havolangiz bilan kirgani yo'q.
+                </div>
+                <div id="page-ref-users"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Tab Bar -->
+    <nav class="tab-bar">
+        <a href="#" class="nav-btn" data-target="page-acc"><i
+                class="fa-solid fa-sliders"></i><span>Nastroyka </span></a>
+        <a href="#" class="nav-btn" data-target="page-dia"><i class="fa-solid fa-gem"></i><span>Xizmatlar</span></a>
+        <a href="#" class="nav-btn active center-btn" data-target="page-home">
+            <div class="center-icon-wrap">
+                <i class="fa-solid fa-house-chimney"></i>
+            </div>
+            <span>Asosiy</span>
+        </a>
+        <a href="#" class="nav-btn" data-target="page-ref"><i class="fa-solid fa-user-plus"></i><span>REFERAL</span></a>
+        <a href="#" class="nav-btn" data-target="page-prof"><i
+                class="fa-solid fa-circle-user"></i><span>Profil</span></a>
+    </nav>
+
+    <!-- 2026 Standard Checkout Sheet -->
+    <div class="sheet-bg" id="checkout-core" onclick="if(event.target === this) closeSheet()">
+        <div class="sheet-content">
+            <div class="drag-handle" onclick="closeSheet()"></div>
+            <button class="close-btn" onclick="closeSheet()"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- Flow 1: Smart ID Checker -->
+            <div class="step-pane active" id="c-step-1">
+                <h3 class="c-title">Akkauntni topish</h3>
+                <p class="c-desc">O'yin ID raqamingizni (UID) aniq kiriting.</p>
+
+                <div class="input-grp">
+                    <label class="input-lbl">O'yin ID (UID)</label>
+                    <input type="number" id="uid-input" class="neo-input" placeholder="Masalan: 12345678"
+                        oninput="document.getElementById('id-found').classList.remove('active'); document.getElementById('btn-next-2').style.display='none'; if(this.value.length > 5) document.getElementById('btn-check-id').disabled = false; else document.getElementById('btn-check-id').disabled = true;">
+                </div>
+
+                <!-- Async Loader (Hidden by default) -->
+                <div class="cyber-loader" id="uid-loader" style="display: none;">
+                    <div class="scanner"><i class="fa-solid fa-fingerprint"></i></div>
+                    <p style="color: var(--primary); font-weight: 800; font-size: 0.9rem; letter-spacing: 1px;">
+                        QIDIRILMOQDA...</p>
+                </div>
+
+                <!-- ID Result -->
+                <div class="id-result" id="id-found">
+                    <div class="id-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Kiritilgan UID:</div>
+                        <div style="font-size:1.1rem; font-weight:900; color:#fff;" id="found-nickname">12345678</div>
+                        <div id="uid-confirm-note" style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+                            O'yin ID raqamingizni (UID) aniqligiga ishonchingiz komilmi?
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-prime ripple" id="btn-check-id" disabled onclick="verifyUID()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Topish
+                </button>
+                <button class="btn-prime ripple" id="btn-next-2" style="display:none;" onclick="goStep(2)">
+                    Davom etish <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Flow 2: Smart Billing Details & Upload -->
+            <div class="step-pane" id="c-step-2">
+                <h3 class="c-title">To'lov va Xarid</h3>
+                <p class="c-desc" id="checkout-desc">Tanlangan paket: 100 Almaz</p>
+
+                <div class="bill-box">
+                    <div class="bill-row">
+                        <span style="color:var(--text-muted); font-weight:600;">Paket narxi:</span>
+                        <span style="font-weight:800; color:#fff;" id="co-price">12,000 UZS</span>
+                    </div>
+                    <div class="bill-row">
+                        <span style="color:var(--text-muted); font-weight:600;">O'yinchi ID:</span>
+                        <span style="font-weight:900; font-family:monospace; color:var(--primary);"
+                            id="bill-uid">12345678</span>
+                    </div>
+                    <div class="bill-row">
+                        <span
+                            style="color:var(--text-muted); font-weight:600; text-transform:uppercase; font-size:0.8rem;">Jami
+                            To'lov:</span>
+                        <span
+                            style="font-size:1.4rem; font-weight:900; color:var(--primary); text-shadow:0 0 10px var(--primary-glow);"
+                            id="co-total">12,000 UZS</span>
+                    </div>
+                </div>
+
+                <div class="input-lbl">TO'LOV QILISH UCHUN RAQAM:</div>
+                <div class="pay-method ripple" onclick="copyCard()" style="cursor: pointer;">
+                    <div
+                        style="width:40px; height:40px; background:rgba(0,0,0,0.5); border-radius:10px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1);">
+                        <img src="assets/img/logo.JPG"
+                            style="width:24px; object-fit:contain;">
+                    </div>
+                    <div style="flex:1;">
+                        <div id="pay-card-label" style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Humo / Uzcard</div>
+                        <div id="pay-card-number" style="font-size:1.1rem; font-weight:900; letter-spacing:1px; color:#fff;">8600 1234 5678
+                            9012</div>
+                        <div id="pay-card-owner" style="font-size:0.72rem; color:var(--text-muted); font-weight:700; margin-top:2px;">Karta egasi: Ism Familiya</div>
+                    </div>
+                    <i class="fa-regular fa-copy" style="color:var(--primary); font-size:1.2rem;"></i>
+                </div>
+
+                <div class="upload-box ripple" id="upload-area">
+                    <input type="file" id="receipt-file" class="upload-input" accept="image/*"
+                        onchange="handleFile(this)">
+                    <i class="fa-solid fa-cloud-arrow-up" id="up-icon"
+                        style="font-size:2.5rem; color:var(--text-muted); margin-bottom:12px; transition:0.3s;"></i>
+                    <div id="up-title" style="font-weight:800; color:#fff; font-size:1.1rem; margin-bottom:4px;">Chekni
+                        bu yerga yuklang</div>
+                    <div id="up-desc" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">To'lov
+                        qilinganligini tasdiqlovchi skrinshot</div>
+                    <img id="receipt-preview"
+                        style="display:none; max-height: 120px; border-radius: 8px; margin-top: 16px; width: auto; max-width: 100%;" />
+                </div>
+
+                <div style="display:flex; gap:12px;">
+                    <button class="btn-sec ripple" onclick="goStep(1)" style="flex:1;">Orqaga</button>
+                    <button class="btn-prime ripple" id="btn-submit-order" onclick="submitOrder()" disabled
+                        style="flex:2; display:none;">
+                        <i class="fa-solid fa-check"></i> Tasdiqlash
+                    </button>
+                </div>
+            </div>
+
+            <!-- Flow 3: Manual Processing & Success Status -->
+            <div class="step-pane" id="c-step-3">
+                <div class="cyber-loader" id="sys-loader">
+                    <div class="scanner" style="color: #FFD700; margin-bottom: 10px;"><i
+                            class="fa-solid fa-spinner fa-spin" style="font-size: 3rem;"></i></div>
+                    <h3 style="font-size:1.4rem; font-weight:900; margin-bottom:8px">Ko'rib chiqilmoqda...</h3>
+                    <p style="color:var(--text-muted); font-weight:600; text-align:center;">To'lov chekingiz adminga
+                        yuborildi.<br>Tez orada tasdiqlanadi.</p>
+                </div>
+
+                <div class="success-box" id="sys-success" style="display:none;">
+                    <div class="s-icon"><i class="fa-solid fa-check"></i></div>
+                    <h2 class="title-xl" style="margin-bottom:12px; font-size:2rem; color:var(--primary);">QABUL
+                        QILINDI!</h2>
+                    <p
+                        style="color:var(--text-muted); font-size:1rem; font-weight:600; margin-bottom:32px; line-height:1.5;">
+                        Sizning buyurtmangiz navbatga qo'shildi.<br>O'rtacha yetkazish vaqti: 1-15 daqiqa.
+                    </p>
+
+                    <div
+                        style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:16px; display:inline-block; margin-bottom: 32px;">
+                        <div
+                            style="font-size:0.8rem; color:var(--text-muted); margin-bottom:4px; text-transform:uppercase; font-weight:800; letter-spacing:1px;">
+                            Buyurtma ID</div>
+                        <div style="font-size:1.4rem; font-weight:900; color:#fff; font-family:monospace;"
+                            id="order-id-display">#ORD-992K</div>
+                    </div>
+
+                    <button class="btn-prime ripple" onclick="navTo('page-prof'); closeSheet();">
+                        <i class="fa-solid fa-box-open"></i> Buyurtmani kuzatish
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2026 Account Details Full-Screen Drawer -->
+    <div class="sheet-bg" id="acc-modal-drawer" onclick="if(event.target === this) closeAccModal()">
+        <div class="sheet-content" style="height: 90vh; display: flex; flex-direction: column; padding: 0;">
+
+            <!-- Sticky Header -->
+            <div
+                style="padding: var(--space-md) var(--space-md); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg-base); z-index: 10;">
+                <h3 class="title-md" style="font-size: 1.2rem; margin: 0; color: #fff;">Akkaunt Ma'lumotlari</h3>
+                <button class="close-btn" style="position: static; margin: 0;" onclick="closeAccModal()"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div style="flex: 1; overflow-y: auto; padding: var(--space-md);">
+
+                <!-- Account Image -->
+                <div class="acc-carousel"
+                    style="width:100%; height:clamp(180px, 38vh, 280px); border-radius: var(--radius-md); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom: var(--space-lg);">
+                    <img src="assets/banner/accaunt.jpeg" alt="acc"
+                        style="width:100%; height:100%; object-fit:contain; object-position:center; cursor:zoom-in;"
+                        onclick="window.openAccImageZoom(this.src)">
+                </div>
+                <div id="modal-acc-overview-wrap" style="display:none; margin-top:-10px; margin-bottom:18px;">
+                    <div style="font-size:0.82rem; font-weight:800; color:var(--text-muted); margin-bottom:8px;">Akkaunt obzor:</div>
+                    <div id="modal-acc-overview-grid" style="display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px;"></div>
+                </div>
+
+
+                <!-- Account Stats Grid -->
+                <h2 class="title-xl" id="modal-acc-title" style="margin-bottom: 8px; font-size: 1.5rem;">OldSkull +
+                    Sakura</h2>
+                <div style="display: flex; gap: 8px; margin-bottom: 24px;">
+                    <span
+                        id="modal-acc-level"
+                        style="background: rgba(0,229,255,0.1); color: var(--primary); padding: 4px 10px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 800; border: 1px solid var(--primary);">72
+                        Level</span>
+                    <span
+                        id="modal-acc-platform"
+                        style="background: rgba(255,255,255,0.05); color: var(--text-muted); padding: 4px 10px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 700;">Ulangan:
+                        VKontakte</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+                    <div
+                        style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: var(--radius-sm); text-align: center;">
+                        <i class="fa-solid fa-shirt"
+                            style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Kiyimlar</div>
+                        <div id="modal-acc-clothes" style="font-size: 1.2rem; font-weight: 900; color: #fff;">182 ta</div>
+                    </div>
+                    <div
+                        style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: var(--radius-sm); text-align: center;">
+                        <i class="fa-solid fa-shield-halved"
+                            style="color: var(--accent); font-size: 1.2rem; margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Xavfsizlik</div>
+                        <div style="font-size: 1rem; font-weight: 800; color: #fff;">100% Toza, Garantiya bilan</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Bottom Action -->
+            <div
+                style="padding: var(--space-md); border-top: 1px solid rgba(255,255,255,0.05); background: var(--bg-base); display: flex; gap: 12px; align-items: center;">
+                <div style="flex: 1;">
+                    <div
+                        style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">
+                        Auksion Narxi</div>
+                    <div style="font-size: 1.4rem; font-weight: 900; color: var(--primary);" id="modal-acc-price">
+                        1,200,000 UZS</div>
+                </div>
+                <button class="btn-prime ripple" style="flex: 1; padding: 14px;"
+                    onclick="closeAccModal(); openSheet({title: 'OldSkull', price: 1200000}, 'acc')">
+                    <i class="fa-solid fa-cart-shopping"></i> Sotib olish
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="sheet-bg" id="acc-image-zoom-modal" onclick="if(event.target===this) window.closeAccImageZoom()"
+        style="z-index:9999; padding: 12px;">
+        <div class="sheet-content"
+            style="height:auto; max-height:95vh; width:100%; max-width:900px; padding:10px; display:flex; align-items:center; justify-content:center; position:relative;">
+            <button class="close-btn" style="position:absolute; top:8px; right:8px;" onclick="window.closeAccImageZoom()"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <img id="acc-image-zoom"
+                style="width:100%; max-height:88vh; object-fit:contain; border-radius:12px; background: rgba(255,255,255,0.02);">
+        </div>
+    </div>
+
+    <div class="sheet-bg" id="redeem-modal" onclick="if(event.target===this) closeRedeemModal()">
+        <div class="sheet-content" style="max-width:520px;">
+            <button class="close-btn" onclick="closeRedeemModal()"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="c-title">Almaz chiqarish</h3>
+            <p class="c-desc">Free Fire mahsulotini tanlang va O'yin ID (UID) kiriting.</p>
+            <div class="glass-panel" style="padding:10px 12px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; border:1px solid rgba(0,229,255,.22);">
+                <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Kategoriya</span>
+                <span style="font-size:0.82rem; color:var(--primary); font-weight:900;">💎 Free Fire</span>
+            </div>
+            <div id="redeem-products" class="glass-panel" style="padding:10px; margin-bottom:10px; max-height:220px; overflow-y:auto;">
+                <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Mahsulotlar yuklanmoqda...</div>
+            </div>
+            <div id="redeem-status" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:10px;">Mahsulot tanlang.</div>
+            <div class="input-grp" id="redeem-uid-wrap" style="margin-bottom:12px; display:none;">
+                <label class="input-lbl">O'yin ID (UID)</label>
+                <input type="number" id="redeem-uid-input" class="neo-input" placeholder="Masalan: 12345678" oninput="onRedeemUidInput()">
+            </div>
+            <div id="redeem-confirm-box" class="id-result" style="display:none; margin-bottom:12px;">
+                <div class="id-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">Kiritilgan UID:</div>
+                    <div style="font-size:1.05rem; font-weight:900; color:#fff;" id="redeem-uid-view">—</div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+                        O'yin ID raqamingizni (UID) aniqligiga ishonchingiz komilmi?
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-prime ripple" id="btn-redeem-send" style="flex:1;" onclick="sendRedeemRequest()" disabled>
+                    HA, DAVOM ETISH
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js?v=20260301-19" defer></script>
+</body>
+
+</html>
+
+
+
