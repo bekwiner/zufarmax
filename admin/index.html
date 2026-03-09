@@ -1429,7 +1429,10 @@ let rOn=true;
 function tR(){rOn=!rOn;const t=document.getElementById('rt'),l=document.getElementById('rl');t.classList.toggle('on',rOn);l.textContent=rOn?'Faol':'O\'chirilgan';l.style.color=rOn?'var(--green)':'var(--muted)';}
 
 // ── REAL BACKEND BINDING (UI O'ZGARMASIN) ──
-const API_BASE=(localStorage.getItem('ADMIN_API_BASE')||(window.location.port==='5500'?'http://127.0.0.1:8888':window.location.origin)).replace(/\/+$/,'');
+const DEV_HOSTS=new Set(['localhost','127.0.0.1']);
+const IS_DEV_CONTEXT=window.location.port==='5500'||DEV_HOSTS.has(window.location.hostname);
+const STORED_ADMIN_API_BASE=localStorage.getItem('ADMIN_API_BASE')||'';
+const API_BASE=((IS_DEV_CONTEXT&&STORED_ADMIN_API_BASE)?STORED_ADMIN_API_BASE:(IS_DEV_CONTEXT?'http://127.0.0.1:8888':window.location.origin)).replace(/\/+$/,'');
 const DEV_KEY=localStorage.getItem('ADMIN_DEV_KEY')||'';
 const TG_INIT_DATA=window.Telegram?.WebApp?.initData||'';
 const STATUS_MAP={pending:'pending',processing:'process',done:'done',cancelled:'cancel'};
@@ -1443,6 +1446,10 @@ function refreshToolsView(){
   if(k)k.textContent=DEV_KEY?'O\'rnatilgan':'O\'rnatilmagan';
 }
 function promptSetApiBase(){
+  if(!IS_DEV_CONTEXT){
+    alert('Production muhitda API Base doim joriy domen orqali ishlaydi.');
+    return;
+  }
   const next=prompt('Yangi API Base kiriting (masalan: https://domeningiz yoki http://127.0.0.1:8888)',API_BASE);
   if(next===null)return;
   localStorage.setItem('ADMIN_API_BASE',String(next||'').trim());
@@ -1461,6 +1468,9 @@ function clearAdminCache(){
   localStorage.removeItem('ADMIN_API_BASE');
   localStorage.removeItem('ADMIN_DEV_KEY');
   location.reload();
+}
+if(!IS_DEV_CONTEXT&&STORED_ADMIN_API_BASE){
+  localStorage.removeItem('ADMIN_API_BASE');
 }
 async function initAdminSession(){
   const nav=document.getElementById('super-tools-nav');
