@@ -2373,18 +2373,29 @@ function editCategory(ev,key){
   if(ev?.stopPropagation)ev.stopPropagation();
   openCategoryModal(key);
 }
-function deleteCategory(ev,key){
+async function deleteCategory(ev,key){
   if(ev?.stopPropagation)ev.stopPropagation();
   const k=normalizeCategory(key);
   if(!k)return;
   const c=categoriesState.find((x)=>x.key===k);
   if(!c)return;
-  const linked=(productsState||[]).filter((p)=>normalizeCategory(p.category)===k).length;
-  if(linked>0){
-    alert(`Bu kategoriyada ${linked} ta mahsulot bor. Avval mahsulotlarni o'chiring yoki boshqa kategoriyaga o'tkazing.`);
-    return;
+  const linkedProducts=(productsState||[]).filter((p)=>normalizeCategory(p.category)===k);
+  if(linkedProducts.length>0){
+    const yes=confirm(`"${c.name}" kategoriyasida ${linkedProducts.length} ta mahsulot bor. Kategoriya bilan birga shu mahsulotlar ham backenddan o'chirilsinmi?`);
+    if(!yes)return;
+    try{
+      for(const product of linkedProducts){
+        await apiRequest('DELETE',`/api/admin/products/${encodeURIComponent(String(product.id))}`);
+      }
+      productsState=productsState.filter((p)=>normalizeCategory(p.category)!==k);
+    }catch(e){
+      alert(`Kategoriya mahsulotlarini o'chirib bo'lmadi: ${e.message}`);
+      await loadProducts();
+      return;
+    }
+  }else{
+    if(!confirm(`"${c.name}" kategoriyasini o'chirasizmi?`))return;
   }
-  if(!confirm(`"${c.name}" kategoriyasini o'chirasizmi?`))return;
   categoriesState=categoriesState.filter((x)=>x.key!==k);
   if(productCategory===k)productCategory='all';
   saveCategoriesToStorage();
@@ -2392,6 +2403,7 @@ function deleteCategory(ev,key){
   renderProductCategorySelect();
   updateProductAddButtonState();
   renderProducts(productsState);
+  await loadProducts();
 }
 function onProductSearch(){
   productQuery=(document.getElementById('prod-search')?.value||'').trim().toLowerCase();
