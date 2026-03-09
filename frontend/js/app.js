@@ -15,7 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const STORE_DATA = window.STORE_DATA || {
+    const STATIC_DATA = JSON.parse(JSON.stringify(window.STORE_DATA || {
+        diamonds: [],
+        uc: [],
+        gold: [],
+        tg: [],
+        accounts: []
+    }));
+    const STORE_DATA = {
         diamonds: [],
         uc: [],
         gold: [],
@@ -23,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         accounts: []
     };
     window.STORE_DATA = STORE_DATA;
-    const STATIC_DATA = JSON.parse(JSON.stringify(STORE_DATA));
     const KNOWN_CATEGORY_META = {
         diamonds: { title: 'Free Fire', badge: 'Almazlar', target: 'sub-dia', icon: 'assets/img/freefire.webp' },
         uc: { title: 'PUBG Mobile', badge: 'UC Paketlar', target: 'sub-uc', icon: 'assets/img/pubg.png' },
@@ -31,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tg: { title: 'Telegram', badge: 'Premium & Stars', target: 'sub-tg', icon: 'assets/img/telegram.png' }
     };
     let accountsHydrated = false;
+    let catalogHydrated = false;
+    let catalogLoadFailed = false;
     let DYNAMIC_CATEGORIES = {};
     let currentDynamicKey = null;
     let selectedSettingsModelKey = null;
@@ -814,6 +822,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const cont = document.getElementById(container);
         if (!cont) return;
         cont.innerHTML = '';
+        if (!catalogHydrated) {
+            cont.innerHTML = `<div style="grid-column:1/-1; padding:24px 16px; text-align:center; color:var(--text-muted); font-size:0.8rem; font-weight:700;">Mahsulotlar yuklanmoqda...</div>`;
+            return;
+        }
+        if (catalogLoadFailed && (!Array.isArray(data) || data.length === 0)) {
+            cont.innerHTML = `<div style="grid-column:1/-1; padding:24px 16px; text-align:center; color:var(--text-muted); font-size:0.8rem; font-weight:700;">Mahsulotlarni yuklab bo'lmadi.</div>`;
+            return;
+        }
+        if (!Array.isArray(data) || data.length === 0) {
+            cont.innerHTML = `<div style="grid-column:1/-1; padding:24px 16px; text-align:center; color:var(--text-muted); font-size:0.8rem; font-weight:700;">Hozircha mahsulot yo'q.</div>`;
+            return;
+        }
         const isUC = container === 'all-uc';
         const isFF = container === 'all-diamonds';
         data.forEach(item => {
@@ -932,6 +952,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cont.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted); font-size:0.78rem; font-weight:700;">Akkauntlar yuklanmoqda...</div>`;
             return;
         }
+        if (catalogLoadFailed && (!Array.isArray(data) || data.length === 0)) {
+            cont.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted); font-size:0.78rem; font-weight:700;">Akkauntlarni yuklab bo'lmadi.</div>`;
+            return;
+        }
 
         let filtered = [...data];
 
@@ -985,7 +1009,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const titleEl = document.getElementById('dynamic-cat-title');
         const subtitleEl = document.getElementById('dynamic-cat-subtitle');
         if (titleEl) titleEl.textContent = titleCase(currentDynamicKey);
-        if (subtitleEl) subtitleEl.textContent = `${items.length} ta paket mavjud.`;
+        if (subtitleEl) subtitleEl.textContent = !catalogHydrated
+            ? 'Mahsulotlar yuklanmoqda...'
+            : `${items.length} ta paket mavjud.`;
         renderDias(items, 'all-dynamic');
         navTo('sub-dynamic');
     };
@@ -1309,7 +1335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadCatalogFromBackend = async () => {
         try {
             const resp = await fetch('/api/catalog', { cache: 'no-store' });
-            if (!resp.ok) return;
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const payload = await resp.json().catch(() => ({}));
             const data = payload?.data || {};
             const mergeCatalog = (key, sourceObj, prop, enrichKey = key) => {
@@ -1334,11 +1360,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!Array.isArray(value) || value.length === 0) return;
                 DYNAMIC_CATEGORIES[key] = enrichCatalogItems(value, key);
             });
+            catalogHydrated = true;
+            catalogLoadFailed = false;
             rerenderStore();
         } catch (err) {
             console.warn('Catalog API xatosi:', err);
+            catalogHydrated = true;
+            catalogLoadFailed = true;
             accountsHydrated = true;
-            STORE_DATA.accounts = enrichAccounts(STORE_DATA.accounts || []);
+            DYNAMIC_CATEGORIES = {};
+            STORE_DATA.diamonds = [];
+            STORE_DATA.uc = [];
+            STORE_DATA.gold = [];
+            STORE_DATA.tg = [];
+            STORE_DATA.accounts = [];
             rerenderStore();
         }
     };

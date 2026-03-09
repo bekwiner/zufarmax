@@ -1429,8 +1429,9 @@ let rOn=true;
 function tR(){rOn=!rOn;const t=document.getElementById('rt'),l=document.getElementById('rl');t.classList.toggle('on',rOn);l.textContent=rOn?'Faol':'O\'chirilgan';l.style.color=rOn?'var(--green)':'var(--muted)';}
 
 // ── REAL BACKEND BINDING (UI O'ZGARMASIN) ──
-const API_BASE=(localStorage.getItem('ADMIN_API_BASE')||'http://127.0.0.1:8888').replace(/\/+$/,'');
+const API_BASE=(localStorage.getItem('ADMIN_API_BASE')||(window.location.port==='5500'?'http://127.0.0.1:8888':window.location.origin)).replace(/\/+$/,'');
 const DEV_KEY=localStorage.getItem('ADMIN_DEV_KEY')||'';
+const TG_INIT_DATA=window.Telegram?.WebApp?.initData||'';
 const STATUS_MAP={pending:'pending',processing:'process',done:'done',cancelled:'cancel'};
 const BACKEND_DEFAULT_ICON='/assets/img/logo.JPG';
 const ADMIN_PREVIEW_DEFAULT_ICON=(window.location.port==='5500')?'/frontend/assets/img/logo.JPG':'/assets/img/logo.JPG';
@@ -1442,7 +1443,7 @@ function refreshToolsView(){
   if(k)k.textContent=DEV_KEY?'O\'rnatilgan':'O\'rnatilmagan';
 }
 function promptSetApiBase(){
-  const next=prompt('Yangi API Base kiriting (masalan: http://127.0.0.1:8888)',API_BASE);
+  const next=prompt('Yangi API Base kiriting (masalan: https://domeningiz yoki http://127.0.0.1:8888)',API_BASE);
   if(next===null)return;
   localStorage.setItem('ADMIN_API_BASE',String(next||'').trim());
   location.reload();
@@ -1484,8 +1485,7 @@ async function runBackendPing(){
   const count=document.getElementById('tools-orders-count');
   if(ping)ping.textContent='Tekshirilmoqda...';
   try{
-    const headers={'Content-Type':'application/json'};
-    if(DEV_KEY)headers['x-dev-admin-key']=DEV_KEY;
+    const headers=getAdminHeaders(true);
     const r=await fetch(`${API_BASE}/api/admin/dashboard`,{headers});
     const j=await r.json().catch(()=>({ok:false,data:[]}));
     if(!r.ok||!j.ok)throw new Error(j.message||`HTTP ${r.status}`);
@@ -1883,8 +1883,7 @@ function gameTypeFromCategory(c){
   return m[c]||'other';
 }
 async function apiGet(path){
-  const h={};
-  if(DEV_KEY)h['x-dev-admin-key']=DEV_KEY;
+  const h=getAdminHeaders(false);
   let r;
   try{
     r=await fetch(`${API_BASE}${path}`,{headers:h});
@@ -1902,8 +1901,7 @@ async function apiGet(path){
   return j.data;
 }
 async function apiRequest(method,path,body){
-  const h={'Content-Type':'application/json'};
-  if(DEV_KEY)h['x-dev-admin-key']=DEV_KEY;
+  const h=getAdminHeaders(true);
   let r;
   try{
     r=await fetch(`${API_BASE}${path}`,{
@@ -1923,6 +1921,13 @@ async function apiRequest(method,path,body){
   }
   if(!r.ok||!j.ok)throw new Error(j.message||`API xato: ${r.status}`);
   return j.data;
+}
+function getAdminHeaders(withJson){
+  const headers={};
+  if(withJson)headers['Content-Type']='application/json';
+  if(DEV_KEY)headers['x-dev-admin-key']=DEV_KEY;
+  if(TG_INIT_DATA)headers['x-telegram-init-data']=TG_INIT_DATA;
+  return headers;
 }
 function renderStats(d){
   const cards=document.querySelectorAll('#pg-dashboard .sgrid .sv');

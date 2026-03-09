@@ -15,4 +15,5 @@ Thumbs.db
 *.key
 
 backend/data/*.json
-
+backend/venv/
+backend/test.py
