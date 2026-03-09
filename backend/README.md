@@ -21,6 +21,7 @@ npm start
 - `ADMIN_CHAT_ID` - admin chat ID (ixtiyoriy)
 - `TELEGRAM_WEBHOOK_URL` - webhook ishlatsangiz public backend URL
 - `TELEGRAM_WEBHOOK_SECRET` - webhook endpoint maxfiy yo'li
+- `DISABLE_TELEGRAM_BOT` - `true` bo'lsa backend API ishlaydi, lekin Telegram bot ishga tushmaydi
 - `ALLOW_LOCAL_ADMIN_BYPASS` - `true` bo'lsa localhost dan admin API authsiz ishlaydi (dev uchun)
 - `DEV_ADMIN_KEY` - xohlansa `x-dev-admin-key` header bilan admin API ga kirish kaliti
 

@@ -18,6 +18,7 @@ const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET || "zufarmax_secret";
 const REFERRAL_BONUS_PER_USER = Number(process.env.REFERRAL_BONUS_PER_USER || 4);
 const INFO_API_URL = process.env.INFO_API_URL || "";
 const INFO_API_KEY = process.env.INFO_API_KEY || "";
+const DISABLE_TELEGRAM_BOT = String(process.env.DISABLE_TELEGRAM_BOT || "").trim().toLowerCase() === "true";
 const ADMIN_PAYMENT_CARD = process.env.ADMIN_PAYMENT_CARD || "8600 1234 5678 9012";
 const DEFAULT_PAYMENT_CONFIG = {
   cardLabel: "Humo / Uzcard",
@@ -2032,6 +2033,15 @@ async function bootstrap() {
   await initDb();
   if (!adminAccessLoaded) {
     await refreshAdminAccessCache();
+  }
+  if (DISABLE_TELEGRAM_BOT) {
+    console.warn("DISABLE_TELEGRAM_BOT=true. Telegram bot ishga tushirilmaydi.");
+    app.locals.notifyNewOrder = async () => {};
+    app.locals.bot = null;
+    app.locals.getBotUsername = async () => null;
+    app.locals.botUsername = null;
+    runtimeTelegramToken = "";
+    return null;
   }
   const superCfg = await getSetting("super_admin", {});
   const savedToken = String(superCfg?.botToken || "").trim();
