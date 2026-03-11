@@ -465,18 +465,18 @@ body::before{
     <!-- DASHBOARD -->
     <div id="pg-dashboard" class="ct">
       <div class="sgrid">
-        <div class="sc cy"><div class="si"><i class="fa-solid fa-bag-shopping"></i></div><div class="sv">1,482</div><div class="sl">Buyurtmalar</div><div class="sc-c cup"><i class="fa-solid fa-arrow-up"></i>+8.4%</div></div>
-        <div class="sc go"><div class="si"><i class="fa-solid fa-money-bill-wave"></i></div><div class="sv">87.4M</div><div class="sl">Daromad (UZS)</div><div class="sc-c cup"><i class="fa-solid fa-arrow-up"></i>+12.1%</div></div>
-        <div class="sc gr"><div class="si"><i class="fa-solid fa-users"></i></div><div class="sv">6,291</div><div class="sl">Foydalanuvchi</div><div class="sc-c cup"><i class="fa-solid fa-arrow-up"></i>+241</div></div>
-        <div class="sc re"><div class="si"><i class="fa-solid fa-hourglass-half"></i></div><div class="sv">12</div><div class="sl">Kutilayotgan</div><div class="sc-c cdn">Ko'rib chiq</div></div>
+        <div class="sc cy"><div class="si"><i class="fa-solid fa-bag-shopping"></i></div><div class="sv">...</div><div class="sl">Buyurtmalar</div><div class="sc-c cup">Yuklanmoqda...</div></div>
+        <div class="sc go"><div class="si"><i class="fa-solid fa-money-bill-wave"></i></div><div class="sv">...</div><div class="sl">Daromad (UZS)</div><div class="sc-c cup">Yuklanmoqda...</div></div>
+        <div class="sc gr"><div class="si"><i class="fa-solid fa-users"></i></div><div class="sv">...</div><div class="sl">Foydalanuvchi</div><div class="sc-c cup">Yuklanmoqda...</div></div>
+        <div class="sc re"><div class="si"><i class="fa-solid fa-hourglass-half"></i></div><div class="sv">...</div><div class="sl">Kutilayotgan</div><div class="sc-c cdn">Yuklanmoqda...</div></div>
       </div>
       <div class="gg">
-        <div class="panel"><div class="ph"><h3>Haftalik Savdo</h3><span>UZS</span></div><div style="padding:12px"><div class="cb" id="chart-bars"></div></div></div>
-        <div class="panel"><div class="ph"><h3>So'nggi Faoliyat</h3><button class="bs" onclick="go('orders')">Barchasi</button></div><div id="act-list"></div></div>
+        <div class="panel"><div class="ph"><h3>Haftalik Savdo</h3><span>UZS</span></div><div style="padding:12px"><div class="cb" id="chart-bars"><div style="width:100%;text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:24px 0">Yuklanmoqda...</div></div></div></div>
+        <div class="panel"><div class="ph"><h3>So'nggi Faoliyat</h3><button class="bs" onclick="go('orders')">Barchasi</button></div><div id="act-list"><div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div></div></div>
       </div>
       <div class="gg">
-        <div class="panel"><div class="ph"><h3>So'nggi Buyurtmalar</h3><button class="bs" onclick="go('orders')">→</button></div><div class="tw"><table class="tbl" id="dash-tbl"></table></div></div>
-        <div class="panel"><div class="ph"><h3>O'yinlar Bo'yicha</h3><span>Bu oy</span></div><div id="rev-rows"></div></div>
+        <div class="panel"><div class="ph"><h3>So'nggi Buyurtmalar</h3><button class="bs" onclick="go('orders')">→</button></div><div class="tw"><table class="tbl" id="dash-tbl"><tbody><tr><td style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">Yuklanmoqda...</td></tr></tbody></table></div></div>
+        <div class="panel"><div class="ph"><h3>O'yinlar Bo'yicha</h3><span>Bu oy</span></div><div id="rev-rows"><div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div></div></div>
       </div>
     </div>
 
@@ -498,7 +498,7 @@ body::before{
       <div class="ab">
         <div style="margin-left:auto" class="sw"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Qidirish..."></div>
       </div>
-      <div class="panel"><div class="ph"><h3>Foydalanuvchilar</h3><span>6,291 ta</span></div><div id="users-list"></div></div>
+      <div class="panel"><div class="ph"><h3>Foydalanuvchilar</h3><span>Yuklanmoqda...</span></div><div id="users-list"><div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div></div></div>
     </div>
 
     <!-- PRODUCTS -->
@@ -1078,69 +1078,8 @@ function go(k,el,type){
 }
 function ft(el){el.closest('.fts').querySelectorAll('.ft').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
 
-// ── CHART ──
-const days=['Du','Se','Ch','Pa','Ju','Sh','Ya'],vals=[42,67,55,80,91,73,88];
-const mx=Math.max(...vals);
-const clr=['#00e5ff','#0099ff','#00e5ff','#ffd700','#00e5ff','#00ff9d','#00e5ff'];
-document.getElementById('chart-bars').innerHTML=days.map((d,i)=>{
-  const h=Math.round((vals[i]/mx)*90);
-  return `<div class="bc2"><div class="br" style="height:${h}px;background:linear-gradient(180deg,${clr[i]},${clr[i]}44)" title="${vals[i]}M UZS"></div><div class="bl">${d}</div></div>`;
-}).join('');
-
-// ── ACTIVITY ──
-const acts=[
-  {d:'var(--green)',t:'Alisher S. — 1060 Almaz sotib oldi',m:'2 daqiqa oldin'},
-  {d:'var(--gold)',t:'To\'lov kutilmoqda · #ORD-441',m:'5 daqiqa oldin'},
-  {d:'var(--cyan)',t:'Sherzod M. — PUBG 600 UC yetkazildi',m:'14 daqiqa oldin'},
-  {d:'var(--red)',t:'Buyurtma bekor qilindi · #ORD-439',m:'22 daqiqa oldin'},
-  {d:'var(--green)',t:'Nodira K. — Telegram Premium aktiv',m:'31 daqiqa oldin'},
-];
-document.getElementById('act-list').innerHTML=acts.map(a=>`<div class="ai2"><div class="ad" style="color:${a.d};background:${a.d}"></div><div><div class="at">${a.t}</div><div class="am">${a.m}</div></div></div>`).join('');
-
-// ── DASH TABLE ──
 const bm={done:'bd2',process:'bp2',pending:'bpn',cancel:'bc'};
 const lm={done:'✓ Yetkazildi',process:'⟳ Jarayonda',pending:'⏳ Kutilmoqda',cancel:'✕ Bekor'};
-const dO=[
-  {id:'#448',p:'2180 Almaz',g:'FF',pr:'95,000',s:'done'},
-  {id:'#447',p:'600 UC',g:'PUBG',pr:'120,000',s:'process'},
-  {id:'#446',p:'3 oy Premium',g:'TG',pr:'85,000',s:'pending'},
-  {id:'#445',p:'Gold 1000',g:'SO2',pr:'55,000',s:'cancel'},
-];
-document.getElementById('dash-tbl').innerHTML=`<thead><tr><th>ID</th><th>Mahsulot</th><th>Narx</th><th>Holat</th></tr></thead><tbody>${dO.map(o=>`<tr><td style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">${o.id}</td><td><div style="font-size:0.82rem;font-weight:700">${o.p}</div><div style="font-size:0.62rem;color:var(--muted)">${o.g}</div></td><td style="font-family:'Space Mono',monospace;font-size:0.72rem">${o.pr}</td><td><span class="badge ${bm[o.s]}">${lm[o.s]}</span></td></tr>`).join('')}</tbody>`;
-
-// ── REVENUE ──
-const revs=[
-  {i:'💎',n:'Free Fire',p:82,a:'38.2M',c:'#ffa700'},
-  {i:'🪂',n:'PUBG UC',p:60,a:'24.1M',c:'#ffcc00'},
-  {i:'✈️',n:'Telegram',p:35,a:'12.8M',c:'#0088ff'},
-  {i:'🎯',n:'Standoff 2',p:22,a:'7.4M',c:'#00f0ff'},
-  {i:'🎮',n:'Akkauntlar',p:12,a:'4.9M',c:'#a855f7'},
-];
-document.getElementById('rev-rows').innerHTML=revs.map(r=>`<div class="rr"><div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:600;min-width:85px"><span>${r.i}</span>${r.n}</div><div class="rbw"><div class="rbf" style="width:${r.p}%;background:${r.c}"></div></div><div style="font-size:0.72rem;font-family:'Space Mono',monospace;color:var(--cyan);min-width:46px;text-align:right">${r.a}</div></div>`).join('');
-
-// ── ORDERS TABLE ──
-const ordD=[
-  {id:'#ORD-448',u:'Alisher S.',p:'2180 Almaz',g:'Free Fire',pr:'95,000',s:'done',d:'27.02'},
-  {id:'#ORD-447',u:'Sherzod M.',p:'600 UC',g:'PUBG',pr:'120,000',s:'process',d:'27.02'},
-  {id:'#ORD-446',u:'Nodira K.',p:'3 oy Premium',g:'Telegram',pr:'85,000',s:'pending',d:'27.02'},
-  {id:'#ORD-445',u:'Jamshid T.',p:'Gold 1000',g:'Standoff 2',pr:'55,000',s:'cancel',d:'26.02'},
-  {id:'#ORD-444',u:'Malika R.',p:'1060 Almaz',g:'Free Fire',pr:'50,000',s:'done',d:'26.02'},
-  {id:'#ORD-443',u:'Bobur A.',p:'OldSkull Akkaunt',g:'FF Acc',pr:'1,200,000',s:'done',d:'25.02'},
-  {id:'#ORD-442',u:'Zulfiya N.',p:'2200 UC',g:'PUBG',pr:'380,000',s:'process',d:'25.02'},
-];
-document.getElementById('ord-tbl').innerHTML=`<thead><tr><th>ID</th><th>User</th><th>Mahsulot</th><th>Narx</th><th>Holat</th><th>Sana</th><th>Amal</th></tr></thead><tbody>${ordD.map(o=>`<tr><td style="font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted)">${o.id}</td><td style="font-weight:700">${o.u}</td><td><div style="font-size:0.82rem;font-weight:700">${o.p}</div><div style="font-size:0.62rem;color:var(--muted)">${o.g}</div></td><td style="font-family:'Space Mono',monospace;font-size:0.72rem">${o.pr}</td><td><span class="badge ${bm[o.s]}">${lm[o.s]}</span></td><td style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted)">${o.d}</td><td><div style="display:flex;gap:4px"><button class="bs"><i class="fa-solid fa-eye"></i></button><button class="bs bd"><i class="fa-solid fa-trash"></i></button></div></td></tr>`).join('')}</tbody>`;
-
-// ── USERS ──
-const uD=[
-  {n:'Bobur Alijonov',id:'@bobur_a',b:'1,500,000',c:'#ffa700'},
-  {n:'Alisher Sotvoldiyev',id:'@alisher_s',b:'450,000',c:'#00e5ff'},
-  {n:'Sherzod Mirzayev',id:'@sherzod_m',b:'120,000',c:'#ffd700'},
-  {n:'Nodira Karimova',id:'@nodira_k',b:'85,000',c:'#a855f7'},
-  {n:'Malika Rahimova',id:'@malika_r',b:'200,000',c:'#00ff9d'},
-  {n:'Zulfiya Nazarova',id:'@zulfiya_n',b:'75,000',c:'#00e5ff'},
-  {n:'Jamshid Toshmatov',id:'@jamshid_t',b:'0',c:'#ff3b5c'},
-];
-document.getElementById('users-list').innerHTML=uD.map(u=>`<div class="ur"><div class="uav" style="background:${u.c}22;color:${u.c}">${u.n[0]}</div><div class="ui"><p>${u.n}</p><span>${u.id}</span></div><div class="ub">${u.b} UZS</div><div style="display:flex;gap:4px;margin-left:7px"><button class="bs"><i class="fa-solid fa-pen"></i></button><button class="bs bd"><i class="fa-solid fa-ban"></i></button></div></div>`).join('');
 
 // ── PRODUCTS ──
 const prods=[
@@ -1393,37 +1332,10 @@ function dAccByEncodedId(encodedId){dAcc(decodeURIComponent(String(encodedId||''
 function tSt(id){const a=accs.find(x=>String(x.id)===String(id));if(!a)return;a.st=a.st==='sale'?'hidden':'sale';rA();}
 function tStByEncodedId(encodedId){tSt(decodeURIComponent(String(encodedId||'')));}
 
-// ── REFERRAL ──
-const tRefs=[
-  {n:'Bobur Alijonov',tg:'@bobur_a',cnt:142,e:'710',c:'#ffd700'},
-  {n:'Alisher Sotvoldiyev',tg:'@alisher_s',cnt:98,e:'490',c:'#c0c0c0'},
-  {n:'Sherzod Mirzayev',tg:'@sherzod_m',cnt:76,e:'380',c:'#cd7f32'},
-  {n:'Zulfiya Nazarova',tg:'@zulfiya_n',cnt:54,e:'270',c:'#00e5ff'},
-  {n:'Malika Rahimova',tg:'@malika_r',cnt:41,e:'205',c:'#a855f7'},
-  {n:'Doniyor Pulatov',tg:'@doniyor_p',cnt:33,e:'165',c:'#00ff9d'},
-];
 const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'];
-document.getElementById('top-refs').innerHTML=tRefs.map((r,i)=>`<div class="rr"><div style="font-size:0.95rem;width:18px">${medals[i]}</div><div style="width:26px;height:26px;border-radius:6px;background:${r.c}22;color:${r.c};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem">${r.n[0]}</div><div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.n}</div><div style="font-size:0.62rem;color:var(--muted);font-family:'Space Mono',monospace">${r.tg}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:0.82rem;font-weight:800;color:${r.c};font-family:'Space Mono',monospace">${r.cnt} kishi</div><div style="font-size:0.62rem;color:var(--muted)">+${r.e} 💎</div></div></div>`).join('');
-
-const recRefs=[
-  {n:'Kamol Yusupov',v:'@bobur_a',t:'2 daq oldin',b:'5 💎',a:true},
-  {n:'Sarvinoz Tosheva',v:'@alisher_s',t:'11 daq oldin',b:'5 💎',a:true},
-  {n:'Rustam Holiqov',v:'@zulfiya_n',t:'28 daq oldin',b:'—',a:false},
-  {n:'Maftuna Qodirov',v:'@sherzod_m',t:'43 daq oldin',b:'5 💎',a:true},
-  {n:'Jahongir Azimov',v:'@malika_r',t:'1 soat oldin',b:'5 💎',a:true},
-  {n:'Dilrabo Ismoil',v:'@bobur_a',t:'1.5 soat oldin',b:'—',a:false},
-];
-document.getElementById('rec-refs').innerHTML=recRefs.map(j=>`<div class="rr"><div style="width:6px;height:6px;border-radius:50%;background:${j.a?'var(--green)':'var(--muted)'};flex-shrink:0;${j.a?'box-shadow:0 0 4px var(--green)':''}"></div><div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:700">${j.n}</div><div style="font-size:0.62rem;color:var(--muted);font-family:'Space Mono',monospace">${j.v} · ${j.t}</div></div><div style="font-size:0.78rem;font-weight:700;color:${j.a?'#ffa700':'var(--muted)'}">${j.b}</div></div>`).join('');
-
-const rTD=[
-  {r:'Bobur A.',u:'Kamol Y.',d:'27.02 14:22',o:'2180 Almaz',b:'5',s:'done'},
-  {r:'Alisher S.',u:'Sarvinoz T.',d:'27.02 14:11',o:'1060 Almaz',b:'5',s:'done'},
-  {r:'Zulfiya N.',u:'Rustam H.',d:'27.02 13:54',o:'—',b:'—',s:'pending'},
-  {r:'Sherzod M.',u:'Maftuna Q.',d:'27.02 13:39',o:'600 UC',b:'5',s:'done'},
-  {r:'Malika R.',u:'Jahongir A.',d:'27.02 13:18',o:'3 oy TG',b:'5',s:'done'},
-  {r:'Bobur A.',u:'Dilrabo I.',d:'27.02 12:47',o:'—',b:'—',s:'pending'},
-];
-document.getElementById('ref-tbl').innerHTML=`<thead><tr><th>Referer</th><th>Yangi User</th><th>Sana</th><th>Buyurtma</th><th>💎</th><th>Holat</th><th>Amal</th></tr></thead><tbody>${rTD.map(r=>`<tr><td style="font-weight:700">${r.r}</td><td style="font-weight:700;color:var(--cyan)">${r.u}</td><td style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted)">${r.d}</td><td style="font-size:0.8rem">${r.o}</td><td style="font-family:'Space Mono',monospace;font-size:0.8rem;color:#ffa700;font-weight:800">${r.b!=='—'?'+'+r.b+' 💎':'<span style="color:var(--muted)">—</span>'}</td><td><span class="badge ${r.s==='done'?'bd2':r.s==='pending'?'bpn':'bc'}">${r.s==='done'?'✓ Berildi':r.s==='pending'?'⏳ Kutilyapti':'✕ Bekor'}</span></td><td><div style="display:flex;gap:4px"><button class="bs"><i class="fa-solid fa-eye"></i></button>${r.s==='pending'?`<button class="bs" style="background:rgba(0,255,157,0.07);border-color:rgba(0,255,157,0.22);color:var(--green)" onclick="alert('Berildi!')"><i class="fa-solid fa-check"></i></button>`:''}</div></td></tr>`).join('')}</tbody>`;
+document.getElementById('top-refs').innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div>`;
+document.getElementById('rec-refs').innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div>`;
+document.getElementById('ref-tbl').innerHTML=`<thead><tr><th>Referer</th><th>Yangi User</th><th>Sana</th><th>Buyurtma</th><th>💎</th><th>Holat</th><th>Amal</th></tr></thead><tbody><tr><td colspan="7" style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">Yuklanmoqda...</td></tr></tbody>`;
 
 let rOn=true;
 function tR(){rOn=!rOn;const t=document.getElementById('rt'),l=document.getElementById('rl');t.classList.toggle('on',rOn);l.textContent=rOn?'Faol':'O\'chirilgan';l.style.color=rOn?'var(--green)':'var(--muted)';}
