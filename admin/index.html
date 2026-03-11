@@ -1092,14 +1092,6 @@ const prods=[
   {n:'Clash of Clans',i:'🏰',c:'#00ff9d',p:['500 gems→25k','1200→55k','2500→110k']},
   {n:'Brawl Stars',i:'⭐',c:'#ffd700',p:['30 gems→15k','80→35k','170→70k']},
 ];
-let fallbackProducts=[
-  {id:'demo_d1',category:'diamonds',title:'530 Almaz',price:23000,qty:530,sortOrder:1,active:true},
-  {id:'demo_d2',category:'diamonds',title:'1060 Almaz',price:45000,qty:1060,sortOrder:2,active:true},
-  {id:'demo_u1',category:'uc',title:'300 UC',price:65000,qty:300,sortOrder:1,active:true},
-  {id:'demo_u2',category:'uc',title:'600 UC',price:120000,qty:600,sortOrder:2,active:true},
-  {id:'demo_g1',category:'gold',title:'500 Gold',price:30000,qty:500,sortOrder:1,active:true},
-  {id:'demo_g2',category:'gold',title:'1000 Gold',price:55000,qty:1000,sortOrder:2,active:true}
-];
 
 // ── ACCOUNTS ──
 const GI={freeFire:{l:'Free Fire',i:'🔥',c:'#ff6b35'},pubg:{l:'PUBG Mobile',i:'🪂',c:'#ffcc00'},standoff:{l:'Standoff 2',i:'🎯',c:'#00f0ff'},mlbb:{l:'Mobile Legends',i:'⚔️',c:'#ff3b5c'},clash:{l:'Clash of Clans',i:'🏰',c:'#00ff9d'},other:{l:'Boshqa',i:'🎮',c:'#a855f7'}};
@@ -2510,18 +2502,6 @@ async function saveP(){
   };
   if(!payload.category||!payload.title||!payload.price){alert('Kategoriya, nomi va narx majburiy');return;}
   try{
-    if(!productsBackendOnline){
-      if(editProductId){
-        productsState=productsState.map((x)=>String(x.id)===String(editProductId)?{...x,...payload,id:x.id}:x);
-      }else{
-        const id=payload.id||`local_${Date.now()}`;
-        productsState.unshift({...payload,id});
-      }
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      closePM();
-      return;
-    }
     if(editProductId){
       delete payload.id;
       await apiRequest('PATCH',`/api/admin/products/${encodeURIComponent(editProductId)}`,payload);
@@ -2533,16 +2513,7 @@ async function saveP(){
   }catch(e){
     if(String(e.message||'').includes('connection error')){
       productsBackendOnline=false;
-      if(editProductId){
-        productsState=productsState.map((x)=>String(x.id)===String(editProductId)?{...x,...payload,id:x.id}:x);
-      }else{
-        const id=payload.id||`local_${Date.now()}`;
-        productsState.unshift({...payload,id});
-      }
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      closePM();
-      alert("Backend ulanmagan. Local rejimda saqlandi.");
+      alert("Backend ulanmagan. Mahsulot saqlanmadi.");
       return;
     }
     alert(`Saqlash xatosi: ${e.message}`);
@@ -2551,21 +2522,12 @@ async function saveP(){
 async function deleteP(id){
   if(!confirm('Mahsulot o\'chirilsinmi?'))return;
   try{
-    if(!productsBackendOnline){
-      productsState=productsState.filter((x)=>String(x.id)!==String(id));
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      return;
-    }
     await apiRequest('DELETE',`/api/admin/products/${encodeURIComponent(id)}`);
     await loadProducts();
   }catch(e){
     if(String(e.message||'').includes('connection error')){
       productsBackendOnline=false;
-      productsState=productsState.filter((x)=>String(x.id)!==String(id));
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      alert("Backend ulanmagan. Local rejimda o'chirildi.");
+      alert("Backend ulanmagan. Mahsulot o'chirilmadi.");
       return;
     }
     alert(`O'chirish xatosi: ${e.message}`);
@@ -2576,21 +2538,12 @@ async function toggleP(id){
   const p=productsState.find((x)=>String(x.id)===String(id));
   if(!p)return;
   try{
-    if(!productsBackendOnline){
-      productsState=productsState.map((x)=>String(x.id)===String(id)?{...x,active:!(x.active!==false)}:x);
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      return;
-    }
     await apiRequest('PATCH',`/api/admin/products/${encodeURIComponent(id)}`,{active:!(p.active!==false)});
     await loadProducts();
   }catch(e){
     if(String(e.message||'').includes('connection error')){
       productsBackendOnline=false;
-      productsState=productsState.map((x)=>String(x.id)===String(id)?{...x,active:!(x.active!==false)}:x);
-      fallbackProducts=[...productsState];
-      renderProducts(productsState);
-      alert("Backend ulanmagan. Local rejimda holat yangilandi.");
+      alert("Backend ulanmagan. Holat yangilanmadi.");
       return;
     }
     alert(`Holatni o'zgartirib bo'lmadi: ${e.message}`);
