@@ -1946,6 +1946,18 @@ function renderStats(d){
   if(cards[2])cards[2].textContent=fInt(d.totalUsers);
   if(cards[3])cards[3].textContent=fInt(d.pendingOrders);
 }
+function setAdminLoadingState(){
+  const cards=document.querySelectorAll('#pg-dashboard .sgrid .sv');
+  cards.forEach((card)=>{ card.textContent='...'; });
+  const chart=document.getElementById('chart-bars');
+  if(chart)chart.innerHTML=`<div style="width:100%;text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:24px 0">Yuklanmoqda...</div>`;
+  const act=document.getElementById('act-list');
+  if(act)act.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div>`;
+  const dashTbl=document.getElementById('dash-tbl');
+  if(dashTbl)dashTbl.innerHTML=`<tbody><tr><td style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">Yuklanmoqda...</td></tr></tbody>`;
+  const rev=document.getElementById('rev-rows');
+  if(rev)rev.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div>`;
+}
 function renderWeekly(weekly=[]){
   const days=['Du','Se','Ch','Pa','Ju','Sh','Ya'];
   const vals=weekly.map(x=>Math.round(Number(x.revenue||0)/1000000));
@@ -1962,7 +1974,9 @@ function renderActivities(items=[]){
     const c=st(a.status)==='done'?'var(--green)':st(a.status)==='process'?'var(--cyan)':st(a.status)==='cancel'?'var(--red)':'var(--gold)';
     return {d:c,t:`${a.productTitle||'Buyurtma'} · ${a.id||''}`,m:fTimeAgo(a.createdAt)};
   });
-  document.getElementById('act-list').innerHTML=rows.map(a=>`<div class="ai2"><div class="ad" style="color:${a.d};background:${a.d}"></div><div><div class="at">${a.t}</div><div class="am">${a.m}</div></div></div>`).join('');
+  document.getElementById('act-list').innerHTML=rows.length
+    ? rows.map(a=>`<div class="ai2"><div class="ad" style="color:${a.d};background:${a.d}"></div><div><div class="at">${a.t}</div><div class="am">${a.m}</div></div></div>`).join('')
+    : `<div style="padding:14px;color:var(--muted);font-size:0.75rem">Hozircha faoliyat yo'q</div>`;
 }
 function renderDashOrders(items=[]){
   const list=(items||[]).slice(0,4).map(o=>{
@@ -1972,7 +1986,7 @@ function renderDashOrders(items=[]){
       :(String(o.productTitle||'').toLowerCase().includes('telegram')||String(o.productTitle||'').toLowerCase().includes('stars')||String(o.productTitle||'').toLowerCase().includes('premium'))?'telegram':'accounts';
     return {id:o.id,p:o.productTitle,g:catName(o.category||guessed),pr:fMoney(o.amount),s:st(o.status)};
   });
-  document.getElementById('dash-tbl').innerHTML=`<thead><tr><th>ID</th><th>Mahsulot</th><th>Narx</th><th>Holat</th></tr></thead><tbody>${list.map(o=>`<tr><td style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">${o.id}</td><td><div style="font-size:0.82rem;font-weight:700">${o.p}</div><div style="font-size:0.62rem;color:var(--muted)">${o.g}</div></td><td style="font-family:'Space Mono',monospace;font-size:0.72rem">${o.pr}</td><td><span class="badge ${bm[o.s]}">${lm[o.s]}</span></td></tr>`).join('')}</tbody>`;
+  document.getElementById('dash-tbl').innerHTML=`<thead><tr><th>ID</th><th>Mahsulot</th><th>Narx</th><th>Holat</th></tr></thead><tbody>${list.length?list.map(o=>`<tr><td style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">${o.id}</td><td><div style="font-size:0.82rem;font-weight:700">${o.p}</div><div style="font-size:0.62rem;color:var(--muted)">${o.g}</div></td><td style="font-family:'Space Mono',monospace;font-size:0.72rem">${o.pr}</td><td><span class="badge ${bm[o.s]}">${lm[o.s]}</span></td></tr>`).join(''):`<tr><td colspan="4" style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">Buyurtma yo'q</td></tr>`}</tbody>`;
 }
 function renderRevenue(items=[]){
   const icons={diamonds:'💎',uc:'🪂',gold:'🎯',telegram:'✈️',tg:'✈️',accounts:'🎮'};
@@ -1984,7 +1998,9 @@ function renderRevenue(items=[]){
     const amt=(Number(r.revenue||0)/1000000).toFixed(1)+'M';
     return {i:icons[key]||'🎮',n:catName(key),p:pct,a:amt,c:colors[key]||'#a855f7'};
   });
-  document.getElementById('rev-rows').innerHTML=rows.map(r=>`<div class="rr"><div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:600;min-width:85px"><span>${r.i}</span>${r.n}</div><div class="rbw"><div class="rbf" style="width:${r.p}%;background:${r.c}"></div></div><div style="font-size:0.72rem;font-family:'Space Mono',monospace;color:var(--cyan);min-width:46px;text-align:right">${r.a}</div></div>`).join('');
+  document.getElementById('rev-rows').innerHTML=rows.length
+    ? rows.map(r=>`<div class="rr"><div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:600;min-width:85px"><span>${r.i}</span>${r.n}</div><div class="rbw"><div class="rbf" style="width:${r.p}%;background:${r.c}"></div></div><div style="font-size:0.72rem;font-family:'Space Mono',monospace;color:var(--cyan);min-width:46px;text-align:right">${r.a}</div></div>`).join('')
+    : `<div style="padding:14px;color:var(--muted);font-size:0.75rem">Hozircha daromad yo'q</div>`;
 }
 function setOrderFilter(filter='all',el){
   orderFilterState=String(filter||'all');
@@ -2172,7 +2188,9 @@ function renderUsers(items=[]){
     b:fMoney(Number(u.totalSpent||0)),
     c:colors[i%colors.length]
   }));
-  document.getElementById('users-list').innerHTML=list.map(u=>`<div class="ur"><div class="uav" style="background:${u.c}22;color:${u.c}">${u.n[0]}</div><div class="ui"><p>${u.n}</p><span>${u.id}</span></div><div class="ub">${u.b} UZS</div><div style="display:flex;gap:4px;margin-left:7px"><button class="bs"><i class="fa-solid fa-pen"></i></button><button class="bs bd"><i class="fa-solid fa-ban"></i></button></div></div>`).join('');
+  document.getElementById('users-list').innerHTML=list.length
+    ? list.map(u=>`<div class="ur"><div class="uav" style="background:${u.c}22;color:${u.c}">${u.n[0]}</div><div class="ui"><p>${u.n}</p><span>${u.id}</span></div><div class="ub">${u.b} UZS</div><div style="display:flex;gap:4px;margin-left:7px"><button class="bs"><i class="fa-solid fa-pen"></i></button><button class="bs bd"><i class="fa-solid fa-ban"></i></button></div></div>`).join('')
+    : `<div style="padding:14px;color:var(--muted);font-size:0.75rem">Foydalanuvchi yo'q</div>`;
   const s=document.querySelector('#pg-users .ph span'); if(s)s.textContent=`${fInt(list.length)} ta`;
 }
 let productsState=[];
@@ -2500,12 +2518,10 @@ async function loadProducts(){
   }catch(e){
     console.error('Products load error:',e.message);
     productsBackendOnline=false;
-    ensureCategoriesFromProducts(fallbackProducts);
-    saveCategoriesToStorage();
     renderCategoryChips();
     renderProductCategorySelect();
     updateProductAddButtonState();
-    renderProducts(fallbackProducts);
+    renderProducts([]);
   }
 }
 function openPMByEncodedId(encodedId){ openPM(decodeURIComponent(String(encodedId||''))); }
@@ -3262,6 +3278,7 @@ function renderReferrals(refData={},orders=[]){
   setReferralFilter(referralFilterState||'all');
 }
 async function loadRealData(){
+  setAdminLoadingState();
   try{
     const [dashRes,ordersRes,usersRes,productsRes,refsRes]=await Promise.allSettled([
       apiGet('/api/admin/dashboard'),
@@ -3283,11 +3300,19 @@ async function loadRealData(){
     renderRevenue(dash?.revenueByCategory||[]);
     renderOrders(orders||[]);
     renderUsers(users||[]);
-    renderProducts((products&&products.length)?products:fallbackProducts);
+    renderProducts(products||[]);
     renderReferrals(refs||{},orders||[]);
   }catch(e){
     console.error('Real backend ulanish xatosi:',e.message);
-    renderProducts(fallbackProducts);
+    renderStats({});
+    renderWeekly([]);
+    renderActivities([]);
+    renderDashOrders([]);
+    renderRevenue([]);
+    renderOrders([]);
+    renderUsers([]);
+    renderProducts([]);
+    renderReferrals({},[]);
   }
 }
 setupProductGridEvents();
