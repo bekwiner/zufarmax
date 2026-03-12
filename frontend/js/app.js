@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gold: { title: 'Standoff 2', badge: 'Gold & Promo', target: 'sub-gold', icon: 'assets/img/standoff.png' },
         tg: { title: 'Telegram', badge: 'Premium & Stars', target: 'sub-tg', icon: 'assets/img/telegram.png' }
     };
+    let CATEGORY_META = {};
     let accountsHydrated = false;
     let catalogHydrated = false;
     let catalogLoadFailed = false;
@@ -81,6 +82,23 @@ document.addEventListener('DOMContentLoaded', () => {
         .replace(/\s+/g, ' ')
         .trim()
         .replace(/\b\w/g, (ch) => ch.toUpperCase());
+    const normalizeCategoryMetaKey = (key) => String(key || '').trim().toLowerCase() === 'telegram' ? 'tg' : String(key || '').trim().toLowerCase();
+    const applyCategoryMeta = (metaMap = {}) => {
+        CATEGORY_META = {};
+        Object.entries(metaMap || {}).forEach(([rawKey, rawValue]) => {
+            const key = normalizeCategoryMetaKey(rawKey);
+            if (!key || !rawValue || typeof rawValue !== 'object') return;
+            const next = {
+                title: String(rawValue.name || rawValue.title || KNOWN_CATEGORY_META[key]?.title || titleCase(key)),
+                badge: String(rawValue.badge || KNOWN_CATEGORY_META[key]?.badge || 'Xizmatlar'),
+                icon: String(rawValue.icon || KNOWN_CATEGORY_META[key]?.icon || 'assets/img/logo.JPG')
+            };
+            CATEGORY_META[key] = next;
+            if (KNOWN_CATEGORY_META[key]) {
+                KNOWN_CATEGORY_META[key] = { ...KNOWN_CATEGORY_META[key], ...next };
+            }
+        });
+    };
 
     const enrichAccounts = (items = []) => {
         const byId = buildMapById(STATIC_DATA.accounts || []);
@@ -1128,11 +1146,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const allKeys = [...visibleKnownKeys, ...dynamicKeys];
 
         quickWrap.innerHTML = allKeys.map((key) => {
+            const customMeta = CATEGORY_META[key] || {};
             const meta = KNOWN_CATEGORY_META[key] || {
-                title: titleCase(key),
-                badge: 'Xizmatlar',
+                title: customMeta.title || titleCase(key),
+                badge: customMeta.badge || 'Xizmatlar',
                 target: `openDynamicCategory('${key}')`,
-                icon: (DYNAMIC_CATEGORIES[key]?.[0]?.icon || 'assets/img/logo.JPG')
+                icon: customMeta.icon || (DYNAMIC_CATEGORIES[key]?.[0]?.icon || 'assets/img/logo.JPG')
             };
             const clickExpr = KNOWN_CATEGORY_META[key] ? `navTo('${meta.target}')` : meta.target;
             return `
@@ -1161,6 +1180,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const key = staticMap[staticKey];
                 const visible = visibleKnownKeys.includes(key);
                 el.style.display = visible ? '' : 'none';
+                if (visible) {
+                    const meta = KNOWN_CATEGORY_META[key] || CATEGORY_META[key];
+                    const img = el.querySelector('img');
+                    const title = el.querySelector('.lux-srv-title');
+                    const badge = el.querySelector('.lux-srv-badge');
+                    if (img && meta?.icon) img.src = meta.icon;
+                    if (title && meta?.title) title.textContent = meta.title;
+                    if (badge && meta?.badge) badge.textContent = meta.badge;
+                }
                 return;
             }
             el.remove();
@@ -1178,7 +1206,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 existing.style.display = '';
                 return;
             }
-            const icon = DYNAMIC_CATEGORIES[key]?.[0]?.icon || 'assets/img/logo.JPG';
+            const dynamicMeta = CATEGORY_META[key] || {};
+            const icon = dynamicMeta.icon || DYNAMIC_CATEGORIES[key]?.[0]?.icon || 'assets/img/logo.JPG';
             const card = document.createElement('div');
             card.className = 'service-card-lux ripple';
             card.setAttribute('data-dynamic-card', key);
@@ -1188,8 +1217,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="lux-glow"></div>
                     <img src="${icon}" alt="${titleCase(key)}">
                 </div>
-                <div class="lux-srv-title">${titleCase(key)}</div>
-                <div class="lux-srv-badge">Yangi kategoriya</div>
+                <div class="lux-srv-title">${dynamicMeta.title || titleCase(key)}</div>
+                <div class="lux-srv-badge">${dynamicMeta.badge || 'Yangi kategoriya'}</div>
             `;
             mainWrap.appendChild(card);
         });
@@ -1338,6 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const payload = await resp.json().catch(() => ({}));
             const data = payload?.data || {};
+            applyCategoryMeta(data.categoryMeta || {});
             const mergeCatalog = (key, sourceObj, prop, enrichKey = key) => {
                 if (!Object.prototype.hasOwnProperty.call(sourceObj, prop)) return;
                 const next = Array.isArray(sourceObj[prop]) ? sourceObj[prop] : [];
@@ -1353,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             STORE_DATA.accounts = enrichAccounts(data.accounts || []);
             accountsHydrated = true;
-            const reserved = new Set(['diamonds', 'uc', 'gold', 'tg', 'telegram', 'accounts']);
+            const reserved = new Set(['diamonds', 'uc', 'gold', 'tg', 'telegram', 'accounts', 'categoryMeta']);
             DYNAMIC_CATEGORIES = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (reserved.has(key)) return;

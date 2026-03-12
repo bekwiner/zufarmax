@@ -2205,6 +2205,26 @@ function loadCategoriesFromStorage(){
     return [...defaultCategories];
   }
 }
+async function loadCategories(showToast=false){
+  try{
+    const rows=await apiGet('/api/admin/categories');
+    categoriesState=Array.isArray(rows)&&rows.length
+      ? rows.map((x)=>({
+          key:slugifyCategoryName(x.key||x.name||'cat'),
+          name:String(x.name||x.key||'Category'),
+          icon:String(x.icon||'🧩'),
+          active:x.active!==false
+        }))
+      : [...defaultCategories];
+    saveCategoriesToStorage();
+  }catch(e){
+    categoriesState=loadCategoriesFromStorage();
+    if(showToast)alert(`Kategoriyalarni yuklab bo'lmadi: ${e.message}`);
+  }
+  renderCategoryChips();
+  renderProductCategorySelect();
+  updateProductAddButtonState();
+}
 function ensureCategoriesFromProducts(items=[]){
   const seen=new Set(categoriesState.map((c)=>c.key));
   (items||[]).forEach((p)=>{
@@ -2316,27 +2336,48 @@ function onCategoryIconUpload(input){
   };
   reader.readAsDataURL(f);
 }
-function saveCategory(){
+async function saveCategory(){
   const name=String(document.getElementById('c-name').value||'').trim();
   const active=document.getElementById('c-status').value==='active';
   if(!name){alert('Kategoriya nomini kiriting');return;}
   let nextCategoryKey=categoryEditKey;
-  if(categoryEditKey){
-    const idx=categoriesState.findIndex((c)=>c.key===categoryEditKey);
-    if(idx<0){alert('Kategoriya topilmadi');return;}
-    const current=categoriesState[idx];
-    categoriesState[idx]={
-      ...current,
-      name,
-      icon:categoryIconData||current.icon||'🧩',
-      active
-    };
-  }else{
-    if(!categoryIconData){alert('Icon upload qiling');return;}
-    const key=slugifyCategoryName(name);
-    if(categoriesState.some((c)=>c.key===key)){alert('Bu kategoriya mavjud');return;}
-    categoriesState.push({key,name,icon:categoryIconData,active});
-    nextCategoryKey=key;
+  try{
+    if(categoryEditKey){
+      const idx=categoriesState.findIndex((c)=>c.key===categoryEditKey);
+      if(idx<0){alert('Kategoriya topilmadi');return;}
+      const current=categoriesState[idx];
+      const saved=await apiRequest('PATCH',`/api/admin/categories/${encodeURIComponent(categoryEditKey)}`,{
+        name,
+        icon:categoryIconData||current.icon||'🧩',
+        active
+      });
+      categoriesState[idx]={
+        key:slugifyCategoryName(saved.key||categoryEditKey),
+        name:String(saved.name||name),
+        icon:String(saved.icon||categoryIconData||current.icon||'🧩'),
+        active:saved.active!==false
+      };
+    }else{
+      if(!categoryIconData){alert('Icon upload qiling');return;}
+      const key=slugifyCategoryName(name);
+      if(categoriesState.some((c)=>c.key===key)){alert('Bu kategoriya mavjud');return;}
+      const saved=await apiRequest('POST','/api/admin/categories',{
+        key,
+        name,
+        icon:categoryIconData,
+        active
+      });
+      categoriesState.push({
+        key:slugifyCategoryName(saved.key||key),
+        name:String(saved.name||name),
+        icon:String(saved.icon||categoryIconData||'🧩'),
+        active:saved.active!==false
+      });
+      nextCategoryKey=key;
+    }
+  }catch(e){
+    alert(`Kategoriya saqlanmadi: ${e.message}`);
+    return;
   }
   if(nextCategoryKey)productCategory=nextCategoryKey;
   saveCategoriesToStorage();
@@ -2372,6 +2413,12 @@ async function deleteCategory(ev,key){
     }
   }else{
     if(!confirm(`"${c.name}" kategoriyasini o'chirasizmi?`))return;
+  }
+  try{
+    await apiRequest('DELETE',`/api/admin/categories/${encodeURIComponent(k)}`);
+  }catch(e){
+    alert(`Kategoriyani o'chirib bo'lmadi: ${e.message}`);
+    return;
   }
   categoriesState=categoriesState.filter((x)=>x.key!==k);
   if(productCategory===k)productCategory='all';
@@ -3228,6 +3275,7 @@ setupProductGridEvents();
 refreshToolsView();
 (async()=>{
   await initAdminSession();
+  await loadCategories(false);
   loadPaymentToolsSettings(false);
   loadMandatoryChannels(false);
   loadDeviceSettings(false);

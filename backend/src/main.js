@@ -67,6 +67,12 @@ const DEFAULT_HERO_BANNERS = [
 ];
 const DEFAULT_HOME_NEWS = [];
 const DEFAULT_HOT_PRODUCTS = [];
+const DEFAULT_CATALOG_CATEGORIES = [
+  { key: "diamonds", name: "Free Fire", badge: "Almazlar", icon: "assets/img/freefire.webp", active: true },
+  { key: "uc", name: "PUBG Mobile", badge: "UC Paketlar", icon: "assets/img/pubg.png", active: true },
+  { key: "gold", name: "Standoff 2", badge: "Gold & Promo", icon: "assets/img/standoff.png", active: true },
+  { key: "telegram", name: "Telegram", badge: "Premium & Stars", icon: "assets/img/telegram.png", active: true }
+];
 const ADMIN_IDS = String(process.env.ADMIN_CHAT_ID || "")
   .split(",")
   .map((v) => v.trim())
@@ -109,6 +115,7 @@ async function fetchCatalogData(options = {}) {
   const whereProducts = includeInactive ? "" : "WHERE active = TRUE";
   const whereAccounts = includeInactive ? "" : "WHERE active = TRUE";
   const hotSet = await getHotProductsSetting();
+  const categoryRows = await getCatalogCategoriesSetting();
 
   const [productsRows, accountsRows] = await Promise.all([
     pool.query(
@@ -137,6 +144,7 @@ async function fetchCatalogData(options = {}) {
     tg: [],
     accounts: []
   };
+  const categoryMap = new Map(categoryRows.map((item) => [item.key, item]));
 
   for (const row of productsRows.rows) {
     const item = {
@@ -149,9 +157,15 @@ async function fetchCatalogData(options = {}) {
     };
     if (!grouped[row.category]) grouped[row.category] = [];
     grouped[row.category].push(item);
+    if (!categoryMap.has(row.category)) {
+      categoryMap.set(row.category, normalizeCatalogCategory({ key: row.category, name: row.category, icon: item.icon }));
+    }
   }
 
   grouped.tg = [...(grouped.telegram || [])];
+  if (categoryMap.has("telegram") && !categoryMap.has("tg")) {
+    categoryMap.set("tg", { ...categoryMap.get("telegram"), key: "tg" });
+  }
 
   grouped.accounts = accountsRows.rows.map((row) => ({
     id: row.id,
@@ -160,6 +174,8 @@ async function fetchCatalogData(options = {}) {
     level: row.level,
     ...((row.meta && typeof row.meta === "object") ? row.meta : {})
   }));
+
+  grouped.categoryMeta = Object.fromEntries([...categoryMap.entries()].map(([key, value]) => [key, value]));
 
   return grouped;
 }
@@ -452,6 +468,52 @@ async function setHomeNewsSetting(rows = []) {
     .map((item) => normalizeHomeNews(item))
     .filter((item) => item.title);
   await setSetting("home_news", next);
+  return next;
+}
+
+function slugifyCategoryKey(value = "") {
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (!normalized) return "";
+  return normalized === "tg" ? "telegram" : normalized;
+}
+
+function normalizeCatalogCategory(item = {}) {
+  const rawKey = item?.key ?? item?.id ?? item?.name ?? item?.title ?? "";
+  const key = slugifyCategoryKey(rawKey) || `cat-${Date.now()}`;
+  const fallback = DEFAULT_CATALOG_CATEGORIES.find((row) => row.key === key);
+  const name = String(item?.name || item?.title || fallback?.name || key).trim() || fallback?.name || key;
+  const badge = String(item?.badge || fallback?.badge || "Xizmatlar").trim() || "Xizmatlar";
+  const icon = String(item?.icon || fallback?.icon || "assets/img/logo.JPG").trim() || "assets/img/logo.JPG";
+  const active = item?.active !== false;
+  return { key, name, badge, icon, active };
+}
+
+async function getCatalogCategoriesSetting() {
+  const value = await getSetting("catalog_categories", DEFAULT_CATALOG_CATEGORIES);
+  const rows = Array.isArray(value) ? value : [];
+  const merged = new Map(DEFAULT_CATALOG_CATEGORIES.map((item) => {
+    const normalized = normalizeCatalogCategory(item);
+    return [normalized.key, normalized];
+  }));
+  rows.forEach((item) => {
+    const normalized = normalizeCatalogCategory(item);
+    merged.set(normalized.key, normalized);
+  });
+  return [...merged.values()];
+}
+
+async function setCatalogCategoriesSetting(rows = []) {
+  const nextMap = new Map();
+  (Array.isArray(rows) ? rows : []).forEach((item) => {
+    const normalized = normalizeCatalogCategory(item);
+    if (normalized.key && normalized.name) nextMap.set(normalized.key, normalized);
+  });
+  const next = [...nextMap.values()];
+  await setSetting("catalog_categories", next);
   return next;
 }
 
@@ -919,12 +981,56 @@ app.get("/api/admin/referrals", requireAdminWebApp, async (req, res) => {
 app.get("/api/admin/catalog", requireAdminWebApp, async (req, res) => {
   const data = await fetchCatalogData({ includeInactive: true });
   const categories = Object.entries(data)
-    .filter(([key]) => key !== "tg")
+    .filter(([key, list]) => key !== "tg" && key !== "categoryMeta" && Array.isArray(list))
     .map(([key, list]) => ({
     key,
     count: Array.isArray(list) ? list.length : 0
   }));
   res.json({ ok: true, data: { categories, catalog: data } });
+});
+
+app.get("/api/admin/categories", requireAdminWebApp, async (req, res) => {
+  const rows = await getCatalogCategoriesSetting();
+  res.json({ ok: true, data: rows.filter((item) => item.key !== "tg") });
+});
+
+app.post("/api/admin/categories", requireAdminWebApp, async (req, res) => {
+  const payload = normalizeCatalogCategory(req.body || {});
+  if (!payload.name) return res.status(400).json({ ok: false, message: "Kategoriya nomi majburiy." });
+  const rows = await getCatalogCategoriesSetting();
+  if (rows.some((item) => item.key === payload.key)) {
+    return res.status(409).json({ ok: false, message: "Bu kategoriya mavjud." });
+  }
+  const saved = await setCatalogCategoriesSetting([...rows, payload]);
+  res.status(201).json({ ok: true, data: saved.find((item) => item.key === payload.key) || payload });
+});
+
+app.patch("/api/admin/categories/:key", requireAdminWebApp, async (req, res) => {
+  const key = slugifyCategoryKey(req.params.key);
+  const rows = await getCatalogCategoriesSetting();
+  const idx = rows.findIndex((item) => item.key === key);
+  if (idx < 0) {
+    return res.status(404).json({ ok: false, message: "Kategoriya topilmadi." });
+  }
+  const next = normalizeCatalogCategory({
+    ...rows[idx],
+    ...req.body,
+    key
+  });
+  rows[idx] = next;
+  await setCatalogCategoriesSetting(rows);
+  res.json({ ok: true, data: next });
+});
+
+app.delete("/api/admin/categories/:key", requireAdminWebApp, async (req, res) => {
+  const key = slugifyCategoryKey(req.params.key);
+  const rows = await getCatalogCategoriesSetting();
+  const next = rows.filter((item) => item.key !== key);
+  if (next.length === rows.length) {
+    return res.status(404).json({ ok: false, message: "Kategoriya topilmadi." });
+  }
+  await setCatalogCategoriesSetting(next);
+  res.json({ ok: true });
 });
 
 app.get("/api/admin/products", requireAdminWebApp, async (req, res) => {
