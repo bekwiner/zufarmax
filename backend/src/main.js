@@ -1185,8 +1185,12 @@ app.get("/api/admin/users", requireAdminWebApp, async (req, res) => {
       au.balance::FLOAT8 AS balance,
       au.banned,
       au.created_at AS "createdAt",
-      COALESCE(COUNT(o.id) FILTER (WHERE o.status = 'done'), 0)::INT AS "ordersCount",
-      COALESCE(SUM(o.amount) FILTER (WHERE o.status = 'done'),0)::FLOAT8 AS "totalSpent",
+      COALESCE(COUNT(o.id) FILTER (
+        WHERE COALESCE(o.status, '') NOT IN ('cancelled', 'canceled')
+      ), 0)::INT AS "ordersCount",
+      COALESCE(SUM(o.amount) FILTER (
+        WHERE COALESCE(o.status, '') NOT IN ('cancelled', 'canceled')
+      ),0)::FLOAT8 AS "totalSpent",
       MAX(o.created_at) AS "lastOrderAt"
     FROM all_users au
     LEFT JOIN orders o ON o.telegram_id = au.telegram_id
