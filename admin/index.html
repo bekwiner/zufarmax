@@ -1862,6 +1862,49 @@ function setAdminLoadingState(){
   const rev=document.getElementById('rev-rows');
   if(rev)rev.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">Yuklanmoqda...</div>`;
 }
+function setAdminUnavailableState(message="Backend bilan ulanib bo'lmadi"){
+  const cards=document.querySelectorAll('#pg-dashboard .sgrid .sv');
+  cards.forEach((card)=>{ card.textContent='—'; });
+  const chart=document.getElementById('chart-bars');
+  if(chart)chart.innerHTML=`<div style="width:100%;text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:24px 0">${message}</div>`;
+  const act=document.getElementById('act-list');
+  if(act)act.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">${message}</div>`;
+  const dashTbl=document.getElementById('dash-tbl');
+  if(dashTbl)dashTbl.innerHTML=`<tbody><tr><td style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">${message}</td></tr></tbody>`;
+  const rev=document.getElementById('rev-rows');
+  if(rev)rev.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">${message}</div>`;
+  const ordTbl=document.getElementById('ord-tbl');
+  if(ordTbl)ordTbl.innerHTML=`<thead><tr><th>ID</th><th>User</th><th>Mahsulot</th><th>Narx</th><th>Holat</th><th>Sana</th><th>Amal</th></tr></thead><tbody><tr><td colspan="7" style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:20px">${message}</td></tr></tbody>`;
+  const usersList=document.getElementById('users-list');
+  if(usersList)usersList.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">${message}</div>`;
+  const usersCount=document.querySelector('#pg-users .ph span');
+  if(usersCount)usersCount.textContent='—';
+  const prodGrid=document.getElementById('prod-grid');
+  if(prodGrid)prodGrid.innerHTML=`<div style="grid-column:span 4;text-align:center;padding:40px 0;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.78rem">${message}</div>`;
+  const prodInfo=document.getElementById('prod-page-info');
+  if(prodInfo)prodInfo.textContent='—';
+  const prodPrev=document.getElementById('prod-prev');
+  if(prodPrev)prodPrev.disabled=true,prodPrev.style.opacity='0.45';
+  const prodNext=document.getElementById('prod-next');
+  if(prodNext)prodNext.disabled=true,prodNext.style.opacity='0.45';
+  const refStatIds=['ref-stat-total','ref-stat-bonus','ref-stat-active','ref-stat-conv'];
+  refStatIds.forEach((id)=>{
+    const node=document.getElementById(id);
+    if(node)node.textContent='—';
+  });
+  const refDeltaIds=['ref-stat-total-delta','ref-stat-bonus-delta','ref-stat-active-delta','ref-stat-conv-delta'];
+  refDeltaIds.forEach((id)=>{
+    const node=document.getElementById(id);
+    if(node)node.textContent='Ulanmadi';
+  });
+  const topRefs=document.getElementById('top-refs');
+  if(topRefs)topRefs.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">${message}</div>`;
+  const recRefs=document.getElementById('rec-refs');
+  if(recRefs)recRefs.innerHTML=`<div style="padding:14px;color:var(--muted);font-size:0.75rem">${message}</div>`;
+  referralRowsState=[];
+  const refTbl=document.getElementById('ref-tbl');
+  if(refTbl)refTbl.innerHTML=`<thead><tr><th>Referer</th><th>Yangi User</th><th>Sana</th><th>Buyurtma</th><th>💎</th><th>Holat</th><th>Amal</th></tr></thead><tbody><tr><td colspan="7" style="text-align:center;color:var(--muted);font-family:'Space Mono',monospace;font-size:0.72rem;padding:18px">${message}</td></tr></tbody>`;
+}
 function renderWeekly(weekly=[]){
   const days=['Du','Se','Ch','Pa','Ju','Sh','Ya'];
   const vals=weekly.map(x=>Math.round(Number(x.revenue||0)/1000000));
@@ -3152,11 +3195,18 @@ async function loadRealData(){
       apiGet('/api/admin/products'),
       apiGet('/api/admin/referrals/analytics')
     ]);
-    const dash=dashRes.status==='fulfilled'?dashRes.value:{};
-    const orders=ordersRes.status==='fulfilled'?ordersRes.value:[];
-    const users=usersRes.status==='fulfilled'?usersRes.value:[];
-    const products=productsRes.status==='fulfilled'?productsRes.value:[];
-    const refs=refsRes.status==='fulfilled'?refsRes.value:{};
+    const failures=[dashRes,ordersRes,usersRes,productsRes,refsRes].filter((result)=>result.status!=='fulfilled');
+    if(failures.length){
+      const message=String(failures[0]?.reason?.message||"Backend bilan ulanib bo'lmadi");
+      console.error('Real backend ulanish xatosi:',message);
+      setAdminUnavailableState(message);
+      return;
+    }
+    const dash=dashRes.value;
+    const orders=ordersRes.value;
+    const users=usersRes.value;
+    const products=productsRes.value;
+    const refs=refsRes.value;
 
     renderStats(dash||{});
     renderWeekly(dash?.weeklySales||[]);
@@ -3169,15 +3219,7 @@ async function loadRealData(){
     renderReferrals(refs||{},orders||[]);
   }catch(e){
     console.error('Real backend ulanish xatosi:',e.message);
-    renderStats({});
-    renderWeekly([]);
-    renderActivities([]);
-    renderDashOrders([]);
-    renderRevenue([]);
-    renderOrders([]);
-    renderUsers([]);
-    renderProducts([]);
-    renderReferrals({},[]);
+    setAdminUnavailableState(e.message||"Backend bilan ulanib bo'lmadi");
   }
 }
 setupProductGridEvents();
