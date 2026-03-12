@@ -12,18 +12,28 @@ function createBot({ token, webAppUrl, adminWebAppUrl, adminChatId, isAdmin, onR
       return false;
     }
   })();
+  const webAppUrlWithVersion = (() => {
+    if (!isValidHttpsWebAppUrl) return webAppUrl;
+    try {
+      const u = new URL(webAppUrl);
+      u.searchParams.set("v", "20260312-category-meta-fix");
+      return u.toString();
+    } catch {
+      return webAppUrl;
+    }
+  })();
 
   const mainMenuRows = [
     [Markup.button.callback("Yordam", "help")]
   ];
 
   if (isValidHttpsWebAppUrl) {
-    mainMenuRows.unshift([Markup.button.webApp("Web Appni ochish", webAppUrl)]);
+    mainMenuRows.unshift([Markup.button.webApp("Web Appni ochish", webAppUrlWithVersion)]);
   }
 
   const mainMenu = Markup.inlineKeyboard(mainMenuRows);
   const miniAppKeyboard = isValidHttpsWebAppUrl
-    ? Markup.keyboard([[Markup.button.webApp("Mini Appni ochish", webAppUrl)]])
+    ? Markup.keyboard([[Markup.button.webApp("Mini Appni ochish", webAppUrlWithVersion)]])
       .resize()
       .persistent()
     : null;
@@ -182,7 +192,7 @@ function createBot({ token, webAppUrl, adminWebAppUrl, adminChatId, isAdmin, onR
     const adminUrlWithVersion = (() => {
       try {
         const u = new URL(adminWebAppUrl);
-        u.searchParams.set("v", "20260312-admin-static-fix");
+        u.searchParams.set("v", "20260312-category-meta-fix-admin");
         return u.toString();
       } catch {
         return adminWebAppUrl;
@@ -219,7 +229,7 @@ function createBot({ token, webAppUrl, adminWebAppUrl, adminChatId, isAdmin, onR
     bot.action(action, async (ctx) => {
       await ctx.answerCbQuery();
       const rows = isValidHttpsWebAppUrl
-        ? [[Markup.button.webApp("Web App orqali buyurtma", webAppUrl)]]
+        ? [[Markup.button.webApp("Web App orqali buyurtma", webAppUrlWithVersion)]]
         : [];
       rows.push([Markup.button.callback("Orqaga", "catalog")]);
       await ctx.reply(`${title} uchun buyurtma berish:`, Markup.inlineKeyboard(rows));
