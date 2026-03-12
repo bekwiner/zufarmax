@@ -85,7 +85,7 @@ let dynamicSuperAdminIds = new Set();
 let adminAccessLoaded = false;
 let runtimeTelegramToken = TELEGRAM_TOKEN;
 
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "20mb" }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
