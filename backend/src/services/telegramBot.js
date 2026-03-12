@@ -182,7 +182,7 @@ function createBot({ token, webAppUrl, adminWebAppUrl, adminChatId, isAdmin, onR
     const adminUrlWithVersion = (() => {
       try {
         const u = new URL(adminWebAppUrl);
-        u.searchParams.set("v", "20260309-api-fix");
+        u.searchParams.set("v", "20260312-admin-static-fix");
         return u.toString();
       } catch {
         return adminWebAppUrl;
