@@ -2218,8 +2218,7 @@ function renderCategoryChips(){
   const box=document.getElementById('prod-filter-chips');
   if(!box)return;
   const activeCats=categoriesState
-    .filter((c)=>c.active!==false)
-    .filter((c)=>(productsState||[]).some((p)=>normalizeCategory(p.category)===c.key));
+    .filter((c)=>c.active!==false);
   if(productCategory!=='all'&&!activeCats.some((c)=>c.key===productCategory)){
     productCategory='all';
   }
@@ -2321,6 +2320,7 @@ function saveCategory(){
   const name=String(document.getElementById('c-name').value||'').trim();
   const active=document.getElementById('c-status').value==='active';
   if(!name){alert('Kategoriya nomini kiriting');return;}
+  let nextCategoryKey=categoryEditKey;
   if(categoryEditKey){
     const idx=categoriesState.findIndex((c)=>c.key===categoryEditKey);
     if(idx<0){alert('Kategoriya topilmadi');return;}
@@ -2336,7 +2336,9 @@ function saveCategory(){
     const key=slugifyCategoryName(name);
     if(categoriesState.some((c)=>c.key===key)){alert('Bu kategoriya mavjud');return;}
     categoriesState.push({key,name,icon:categoryIconData,active});
+    nextCategoryKey=key;
   }
+  if(nextCategoryKey)productCategory=nextCategoryKey;
   saveCategoriesToStorage();
   renderCategoryChips();
   renderProductCategorySelect();
