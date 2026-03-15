@@ -9,6 +9,7 @@ const { createBot } = require("./services/telegramBot");
 const app = express();
 let bootstrapStatus = { ok: false, error: null };
 
+const NODE_ENV = String(process.env.NODE_ENV || "development").trim().toLowerCase();
 const PORT = Number(process.env.PORT || 3000);
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const WEB_APP_URL = process.env.WEB_APP_URL || "https://t.me";
@@ -83,7 +84,7 @@ const SUPER_ADMIN_IDS = String(process.env.SUPER_ADMIN_CHAT_ID || ADMIN_IDS[0] |
   .filter(Boolean);
 const ADMIN_WEB_APP_URL = process.env.ADMIN_WEB_APP_URL
   || (WEB_APP_URL ? `${WEB_APP_URL.replace(/\/+$/, "")}/admin` : "");
-const ALLOW_LOCAL_ADMIN_BYPASS = process.env.ALLOW_LOCAL_ADMIN_BYPASS !== "false";
+const ALLOW_LOCAL_ADMIN_BYPASS = String(process.env.ALLOW_LOCAL_ADMIN_BYPASS || "").trim().toLowerCase() === "true";
 const DEV_ADMIN_KEY = String(process.env.DEV_ADMIN_KEY || "").trim();
 const DEFAULT_ADMIN_ACCESS = { admins: [], superAdmins: [] };
 let dynamicAdminIds = new Set();
@@ -91,6 +92,7 @@ let dynamicSuperAdminIds = new Set();
 let adminAccessLoaded = false;
 let runtimeTelegramToken = TELEGRAM_TOKEN;
 
+app.set("trust proxy", 1);
 app.use(express.json({ limit: "20mb" }));
 
 app.use((req, res, next) => {
@@ -120,7 +122,7 @@ async function fetchCatalogData(options = {}) {
   const [productsRows, accountsRows] = await Promise.all([
     pool.query(
       `
-      SELECT id, category, title, price::FLOAT8 AS price, qty, icon, active, sort_order AS "sortOrder"
+      SELECT id, category, title, price::FLOAT8 AS price, qty, icon, description, active, sort_order AS "sortOrder"
       FROM catalog_products
       ${whereProducts}
       ORDER BY category ASC, sort_order ASC, created_at ASC
@@ -153,6 +155,7 @@ async function fetchCatalogData(options = {}) {
       price: Number(row.price || 0),
       qty: Number(row.qty || 0),
       icon: row.icon || "assets/img/logo.JPG",
+      description: String(row.description || ""),
       hot: hotSet.has(String(row.id))
     };
     if (!grouped[row.category]) grouped[row.category] = [];
@@ -1044,6 +1047,7 @@ app.get("/api/admin/products", requireAdminWebApp, async (req, res) => {
       price::FLOAT8 AS price,
       qty,
       icon,
+      description,
       active,
       sort_order AS "sortOrder",
       created_at AS "createdAt"
@@ -1090,17 +1094,18 @@ app.post("/api/admin/products", requireAdminWebApp, async (req, res) => {
   const qty = Number(req.body?.qty || 0);
   const sortOrder = Number(req.body?.sortOrder || 0);
   const icon = String(req.body?.icon || "assets/img/logo.JPG").trim() || "assets/img/logo.JPG";
+  const description = String(req.body?.description || "").trim();
   const active = req.body?.active !== false;
   const hot = req.body?.hot === true;
   const id = String(req.body?.id || crypto.randomUUID());
 
   const { rows } = await pool.query(
     `
-    INSERT INTO catalog_products (id, category, title, price, qty, icon, active, sort_order)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-    RETURNING id, category, title, price::FLOAT8 AS price, qty, icon, active, sort_order AS "sortOrder"
+    INSERT INTO catalog_products (id, category, title, price, qty, icon, description, active, sort_order)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+    RETURNING id, category, title, price::FLOAT8 AS price, qty, icon, description, active, sort_order AS "sortOrder"
     `,
-    [id, category, title, price, qty, icon, active, sortOrder]
+    [id, category, title, price, qty, icon, description, active, sortOrder]
   );
 
   if (hot) {
@@ -1127,6 +1132,7 @@ app.patch("/api/admin/products/:id", requireAdminWebApp, async (req, res) => {
   const price = req.body?.price != null ? Number(req.body.price) : Number(row.price);
   const qty = req.body?.qty != null ? Number(req.body.qty) : Number(row.qty);
   const icon = req.body?.icon != null ? String(req.body.icon).trim() : String(row.icon || "assets/img/logo.JPG");
+  const description = req.body?.description != null ? String(req.body.description).trim() : String(row.description || "");
   const sortOrder = req.body?.sortOrder != null ? Number(req.body.sortOrder) : Number(row.sort_order);
   const active = req.body?.active != null ? Boolean(req.body.active) : Boolean(row.active);
   const hot = req.body?.hot != null ? req.body.hot === true : null;
@@ -1134,11 +1140,11 @@ app.patch("/api/admin/products/:id", requireAdminWebApp, async (req, res) => {
   const { rows } = await pool.query(
     `
     UPDATE catalog_products
-    SET category = $1, title = $2, price = $3, qty = $4, icon = $5, sort_order = $6, active = $7
-    WHERE id = $8
-    RETURNING id, category, title, price::FLOAT8 AS price, qty, icon, active, sort_order AS "sortOrder"
+    SET category = $1, title = $2, price = $3, qty = $4, icon = $5, description = $6, sort_order = $7, active = $8
+    WHERE id = $9
+    RETURNING id, category, title, price::FLOAT8 AS price, qty, icon, description, active, sort_order AS "sortOrder"
     `,
-    [category, title, price, qty, icon || "assets/img/logo.JPG", sortOrder, active, id]
+    [category, title, price, qty, icon || "assets/img/logo.JPG", description, sortOrder, active, id]
   );
 
   if (hot != null) {
@@ -2232,6 +2238,13 @@ const server = app.listen(PORT, async () => {
   } catch (error) {
     bootstrapStatus = { ok: false, error: error.message };
     console.error("Startup warning:", error.message);
+    if (NODE_ENV === "production") {
+      console.error("Production bootstrap xatosi. Process to'xtatiladi.");
+      server.close(() => {
+        pool.end().finally(() => process.exit(1));
+      });
+      return;
+    }
     console.error("Server process ishlashda davom etadi (degraded mode).");
   }
 });

@@ -75,6 +75,11 @@ async function initDb() {
   `);
 
   await pool.query(`
+    ALTER TABLE catalog_products
+    ADD COLUMN IF NOT EXISTS description TEXT NOT NULL DEFAULT '';
+  `);
+
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS catalog_accounts (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -148,6 +153,7 @@ async function initDb() {
           Number(item.price || 0),
           Number(item.qty || 0),
           String(item.icon || "assets/img/logo.JPG"),
+          String(item.description || ""),
           true,
           idx
         ]);
@@ -157,8 +163,8 @@ async function initDb() {
     for (const row of rows) {
       await pool.query(
         `
-        INSERT INTO catalog_products (id, category, title, price, qty, icon, active, sort_order)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+        INSERT INTO catalog_products (id, category, title, price, qty, icon, description, active, sort_order)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
         ON CONFLICT (id) DO NOTHING
         `,
         row

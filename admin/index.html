@@ -903,6 +903,7 @@ body::before{
         </div>
         <div><label class="fl">ID (ixtiyoriy)</label><input class="fi" id="p-id" type="text" placeholder="auto"></div>
         <div class="s2"><label class="fl">Nomi *</label><input class="fi" id="p-title" type="text" placeholder="600 UC"></div>
+        <div class="s2"><label class="fl">Description</label><textarea class="fi" id="p-description" placeholder="Mahsulot haqida qisqacha ma'lumot" style="min-height:88px;resize:vertical"></textarea></div>
         <div class="s2">
           <label class="fl">Rasm qo'shish (ixtiyoriy)</label>
           <input id="p-image-file" type="file" accept="image/*" onchange="onProductImageUpload(this)" style="display:none">
@@ -2532,6 +2533,7 @@ function openPM(id=null){
   document.getElementById('p-id').value=p?String(p.id||''):'';
   document.getElementById('p-cat').value=p?normalizeCategory(p.category):(productCategory!=='all'?productCategory:'');
   document.getElementById('p-title').value=p?String(p.title||''):'';
+  document.getElementById('p-description').value=p?String(p.description||''):'';
   productImageData=p?String(p.icon||BACKEND_DEFAULT_ICON):BACKEND_DEFAULT_ICON;
   const imgPreview=document.getElementById('p-image-preview');
   if(imgPreview)imgPreview.innerHTML=`<img src="${resolveAdminIconSrc(productImageData)}" alt="preview" style="width:100%;height:100%;object-fit:cover;">`;
@@ -2585,6 +2587,7 @@ async function saveP(){
     id:document.getElementById('p-id').value.trim()||undefined,
     category:normalizeCategory(document.getElementById('p-cat').value.trim()||editingItem?.category||''),
     title:document.getElementById('p-title').value.trim(),
+    description:document.getElementById('p-description').value.trim(),
     icon:productImageData||editingItem?.icon||BACKEND_DEFAULT_ICON,
     price:Number(document.getElementById('p-price').value||0),
     qty:Number(document.getElementById('p-qty').value||0),

@@ -151,6 +151,33 @@ document.addEventListener('DOMContentLoaded', () => {
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
+    const productInfoModal = document.getElementById('product-info-modal');
+    window.openProductInfo = (item) => {
+        if (!item || !productInfoModal) return;
+        const titleEl = document.getElementById('product-info-title');
+        const priceEl = document.getElementById('product-info-price');
+        const descEl = document.getElementById('product-info-description');
+        if (titleEl) titleEl.textContent = String(item.title || 'Mahsulot');
+        if (priceEl) priceEl.textContent = `${Number(item.price || 0).toLocaleString()} UZS`;
+        if (descEl) {
+            const desc = String(item.description || '').trim();
+            descEl.textContent = desc || 'Bu mahsulot uchun hozircha qoshimcha malumot kiritilmagan.';
+        }
+        productInfoModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+    window.closeProductInfo = () => {
+        if (!productInfoModal) return;
+        productInfoModal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    const bindProductInfoButton = (button, item) => {
+        if (!button) return;
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            window.openProductInfo(item);
+        });
+    };
     const formatOrderTime = (value) => {
         const d = new Date(value);
         if (Number.isNaN(d.getTime())) return 'Hozirgina';
@@ -859,12 +886,16 @@ document.addEventListener('DOMContentLoaded', () => {
             d.className = 'glass-panel dia-card ripple';
             d.style.padding = '12px 10px';
             d.innerHTML = `
+                <button class="product-info-btn" type="button" aria-label="Mahsulot haqida">
+                    <i class="fa-solid fa-circle-info"></i>
+                </button>
                 <img src="${item.icon}" class="dia-img" alt="diamond" style="width:${isUC ? '100px' : (isFF ? '85px' : '42px')}; height:${isUC ? '100px' : (isFF ? '85px' : '42px')}; object-fit:contain; margin-bottom:${(isUC || isFF) ? '12px' : '10px'};">
                 <div class="dia-title" style="font-size:0.75rem; font-weight:800; margin-bottom:4px; display:${(isUC || isFF) ? 'none' : 'block'};">${item.title}</div>
                 <div class="dia-bonus" style="font-size:0.6rem; color:var(--primary); font-weight:900; margin-bottom:4px; display:${(isUC || isFF) ? 'none' : 'block'};">${item.bonus !== '0' ? '+' + item.bonus : ''}</div>
                 <div class="dia-price" style="font-size:0.85rem; font-weight:900; color:#fff;">${item.price.toLocaleString()} UZS</div>
             `;
             d.onclick = () => openSheet(item, 'dia');
+            bindProductInfoButton(d.querySelector('.product-info-btn'), item);
             cont.appendChild(d);
         });
     };
@@ -1266,14 +1297,21 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         wrap.style.display = '';
-        listEl.innerHTML = hotItems.slice(0, 12).map((item) => `
-            <div class="dia-card ripple" onclick='window.openTopOrder(${JSON.stringify(item).replace(/"/g, '&quot;')}, "${item.__type}")' style="min-width: 140px;">
+        listEl.innerHTML = hotItems.slice(0, 12).map((item, index) => `
+            <div class="dia-card ripple" data-hot-index="${index}" onclick='window.openTopOrder(${JSON.stringify(item).replace(/"/g, '&quot;')}, "${item.__type}")' style="min-width: 140px;">
                 <div style="position: absolute; top: 0; right: 0; background: #FF4757; color: #fff; font-size: 0.6rem; font-weight: 900; padding: 3px 10px; border-radius: 0 16px 0 10px; box-shadow: 0 2px 5px rgba(255,71,87,0.4); z-index: 10;">HOT</div>
+                <button class="product-info-btn" type="button" aria-label="Mahsulot haqida" style="right:12px; top:34px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                </button>
                 <img src="${escapeHtml(item.icon || 'assets/img/logo.JPG')}" class="dia-img" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 12px; margin-top: 5px;">
                 <div class="dia-title" style="font-size: 0.82rem; font-weight: 800;">${escapeHtml(item.title || 'Mahsulot')}</div>
                 <div class="dia-price" style="font-size: 0.88rem;">${Number(item.price || 0).toLocaleString()} UZS</div>
             </div>
         `).join('');
+        hotItems.slice(0, 12).forEach((item, index) => {
+            const card = listEl.querySelector(`[data-hot-index="${index}"]`);
+            bindProductInfoButton(card?.querySelector('.product-info-btn'), item);
+        });
     };
     const loadHomeNews = async () => {
         try {

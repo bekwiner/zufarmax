@@ -746,6 +746,23 @@
         </div>
     </div>
 
+    <div class="sheet-bg" id="product-info-modal" onclick="if(event.target === this) closeProductInfo()">
+        <div class="sheet-content" style="max-width:420px; padding:22px 18px 18px;">
+            <div class="drag-handle" onclick="closeProductInfo()"></div>
+            <button class="close-btn" onclick="closeProductInfo()"><i class="fa-solid fa-xmark"></i></button>
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
+                <div style="width:44px; height:44px; border-radius:14px; flex:none; background:rgba(0,229,255,0.12); border:1px solid rgba(0,229,255,0.24); display:flex; align-items:center; justify-content:center; color:var(--primary);">
+                    <i class="fa-solid fa-circle-info" style="font-size:1.05rem;"></i>
+                </div>
+                <div style="min-width:0; flex:1;">
+                    <div id="product-info-title" style="font-size:1rem; font-weight:900; color:#fff; line-height:1.35;">Mahsulot haqida</div>
+                    <div id="product-info-price" style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:4px;"></div>
+                </div>
+            </div>
+            <div id="product-info-description" style="font-size:0.86rem; line-height:1.6; color:#d7e7f7; white-space:pre-wrap;"></div>
+        </div>
+    </div>
+
     <!-- 2026 Account Details Full-Screen Drawer -->
     <div class="sheet-bg" id="acc-modal-drawer" onclick="if(event.target === this) closeAccModal()">
         <div class="sheet-content" style="height: 90vh; display: flex; flex-direction: column; padding: 0;">
