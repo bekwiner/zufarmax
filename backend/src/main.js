@@ -2233,6 +2233,7 @@ let botInstance = null;
 const server = app.listen(PORT, async () => {
   try {
     console.log(`Server started: http://localhost:${PORT}`);
+    bootstrapStatus = { ok: true, error: null };
     botInstance = await bootstrap();
     bootstrapStatus = { ok: true, error: null };
   } catch (error) {
