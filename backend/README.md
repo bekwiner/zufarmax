@@ -26,6 +26,7 @@ Production uchun `NODE_ENV=production` ishlating.
 - `SUPER_ADMIN_CHAT_ID` - super admin ID(lar)i
 - `TELEGRAM_WEBHOOK_URL` - webhook ishlatsangiz public backend URL
 - `TELEGRAM_WEBHOOK_SECRET` - webhook endpoint maxfiy yo'li
+- `FF_INFO_API_URL` - Free Fire ID check API (`account_data.nickname` olinadi)
 - `DISABLE_TELEGRAM_BOT` - `true` bo'lsa backend API ishlaydi, lekin Telegram bot ishga tushmaydi
 - `ALLOW_LOCAL_ADMIN_BYPASS` - faqat local dev uchun `true`, productionda `false`
 - `DEV_ADMIN_KEY` - xohlansa `x-dev-admin-key` header bilan admin API ga kirish kaliti

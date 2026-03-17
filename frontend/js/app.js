@@ -745,14 +745,35 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.style.display = 'none';
         loader.style.display = 'flex';
 
-        await new Promise((resolve) => setTimeout(resolve, 450));
-        loader.style.display = 'none';
-        document.getElementById('found-nickname').innerText = val;
-        document.getElementById('id-found').classList.add('active');
-        confirmedUID = val;
-        confirmedNickname = '';
-        haptic('success');
-        document.getElementById('btn-next-2').style.display = 'block';
+        try {
+            if (currType === 'dia') {
+                const resp = await fetch('/api/player/lookup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: val, game: 'ff' })
+                });
+                const payload = await resp.json().catch(() => ({}));
+                if (!resp.ok || payload.ok === false) {
+                    throw new Error(payload.message || 'Nickname topilmadi');
+                }
+                document.getElementById('found-nickname').innerText = String(payload?.data?.nickname || val);
+                confirmedNickname = String(payload?.data?.nickname || '');
+            } else {
+                await new Promise((resolve) => setTimeout(resolve, 450));
+                document.getElementById('found-nickname').innerText = val;
+                confirmedNickname = '';
+            }
+
+            loader.style.display = 'none';
+            document.getElementById('id-found').classList.add('active');
+            confirmedUID = val;
+            haptic('success');
+            document.getElementById('btn-next-2').style.display = 'block';
+        } catch (err) {
+            loader.style.display = 'none';
+            btn.style.display = '';
+            showToast(err.message || 'ID tekshirib bo\'lmadi');
+        }
     };
 
     window.goStep = (num) => {

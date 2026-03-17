@@ -19,6 +19,7 @@ const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET || "zufarmax_secret";
 const REFERRAL_BONUS_PER_USER = Number(process.env.REFERRAL_BONUS_PER_USER || 4);
 const INFO_API_URL = process.env.INFO_API_URL || "";
 const INFO_API_KEY = process.env.INFO_API_KEY || "";
+const FF_INFO_API_URL = process.env.FF_INFO_API_URL || "https://aruzff-info.vercel.app/api/playerinfo";
 const DISABLE_TELEGRAM_BOT = String(process.env.DISABLE_TELEGRAM_BOT || "").trim().toLowerCase() === "true";
 const ADMIN_PAYMENT_CARD = process.env.ADMIN_PAYMENT_CARD || "8600 1234 5678 9012";
 const DEFAULT_PAYMENT_CONFIG = {
@@ -557,6 +558,24 @@ async function upsertUserProfile(user = {}) {
 async function lookupPlayer(game, uid) {
   const trimmedUid = String(uid || "").trim();
   if (!trimmedUid) return { ok: false, message: "UID bo'sh." };
+  const normalizedGame = String(game || "").trim().toLowerCase();
+
+  if (["ff", "freefire", "dia", "diamonds"].includes(normalizedGame)) {
+    const url = new URL(FF_INFO_API_URL);
+    url.searchParams.set("uid", trimmedUid);
+    const resp = await fetch(url, {
+      method: "GET",
+      headers: { Accept: "application/json" }
+    });
+    if (!resp.ok) {
+      return { ok: false, message: `FF Info API xato: ${resp.status}` };
+    }
+
+    const payload = await resp.json().catch(() => ({}));
+    const nickname = payload?.account_data?.nickname || null;
+    if (!nickname) return { ok: false, message: "Nickname topilmadi." };
+    return { ok: true, nickname: String(nickname), raw: payload };
+  }
 
   // Fallback mode: if INFO_API_URL yo'q bo'lsa, test nickname qaytadi.
   if (!INFO_API_URL) {
